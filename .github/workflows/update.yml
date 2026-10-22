@@ -1,0 +1,53 @@
+name: კურსების განახლება
+
+on:
+  schedule:
+    - cron: "41 13 * * *"   # 17:41 თბილისით: ეროვნული ბანკი ხვალინდელ კურსს ~17:00-ზე აქვეყნებს
+    - cron: "41 4 * * *"    # 08:41 თბილისით: სათადარიგო გაშვება
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: ახალი კურსები ეროვნული ბანკიდან
+        run: python3 scripts/update_rates.py index.html
+
+      - name: ცვლილების შენახვა რეპოში
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "კურსების განახლება" -- index.html
+            git push
+          fi
+
+      - name: საიტის ფაილები
+        run: |
+          mkdir -p _site
+          cp index.html manifest.webmanifest icon.svg icon-192.png icon-512.png apple-touch-icon.png _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v5
