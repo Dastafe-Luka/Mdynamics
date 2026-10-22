@@ -1,0 +1,1203 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ლარის პულსი</title>
+<meta name="description" content="ლარის კურსი დოლართან და ევროსთან — საქართველოს ეროვნული ბანკის ოფიციალური კურსები, ყოველდღიური განახლებით.">
+<meta property="og:title" content="ლარის პულსი">
+<meta property="og:description" content="USD/GEL და EUR/GEL დაშბორდი — ეროვნული ბანკის ოფიციალური კურსები.">
+<meta name="application-name" content="ლარის პულსი">
+<meta name="apple-mobile-web-app-title" content="ლარის პულსი">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f6f1e3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#25231e" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wdth,wght@62.5..100,100..900&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --canvas:#f3f1eb;
+  --card:#ffffff;
+  --ivory:#f6f1e3;
+  --ink:#23262b;
+  --ink-2:#5e6168;
+  --ink-3:#6c6f75;
+  --hair:#ebe8e0;
+  --line:#e3dfd4;
+  --base:#c9c5bb;
+  --rule:#e6dfcc;
+  --usd:#3b6ea8;
+  --eur:#b37a2e;
+  --cross:#4b5058;
+  --band:rgba(35,38,43,.045);
+  --sel:rgba(35,38,43,.075);
+  --xhair:#a3a6aa;
+  --shadow:0 8px 28px rgba(35,38,43,.12);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    color-scheme:dark;
+    --canvas:#151617;
+    --card:#1f2022;
+    --ivory:#25231e;
+    --ink:#ecebe6;
+    --ink-2:#b4b2aa;
+    --ink-3:#9a988f;
+    --hair:#2e2f31;
+    --line:#2c2d30;
+    --base:#46474a;
+    --rule:#37332b;
+    --usd:#5b8cc8;
+    --eur:#b5813a;
+    --cross:#a9acb3;
+    --band:rgba(236,235,230,.05);
+    --sel:rgba(236,235,230,.09);
+    --xhair:#6b6d71;
+    --shadow:0 8px 28px rgba(0,0,0,.5);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:"Noto Sans Georgian","DejaVu Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.5}
+a{color:inherit;text-decoration-color:var(--base);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:3px}
+button{font:inherit}
+
+/* title bar + slicer */
+.bar{background:var(--ivory);border-bottom:1px solid var(--rule)}
+.bar-in{max-width:1360px;margin:0 auto;padding:16px 20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 28px}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.logo{width:44px;height:44px;border-radius:11px;flex:none;box-shadow:0 0 0 1px var(--rule)}
+.ttl h1{margin:0;font-size:25px;font-weight:650;font-stretch:84%;line-height:1.2;letter-spacing:-.005em}
+.seg button[hidden]{display:none}
+.ttl p{margin:2px 0 0;font-size:13.5px;color:var(--ink-2)}
+.slicer{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px 12px}
+.seg{display:inline-flex;flex-wrap:wrap;background:var(--card);border:1px solid var(--base);border-radius:999px;padding:3px}
+.seg button{font-size:13.5px;line-height:1.3;border:0;background:transparent;color:var(--ink-2);padding:6px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--card)}
+.seg button:not([aria-pressed="true"]):hover{background:var(--band);color:var(--ink)}
+.chip{font-size:13px;border:1px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
+.upd-top{font-size:13px;color:var(--ink-2)}
+.tw.mat{max-height:560px}
+tfoot td{position:sticky;bottom:0;background:var(--card)}
+/* sticky period bar */
+.pbar{position:sticky;top:0;z-index:20;background:var(--canvas);background:color-mix(in srgb,var(--canvas) 88%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.pbar-in{max-width:1360px;margin:0 auto;padding:7px 20px;display:flex;align-items:center;gap:10px;min-height:46px;overflow-x:auto;scrollbar-width:none}
+.pbar-in::-webkit-scrollbar{display:none}
+.chips{display:inline-flex;gap:4px;flex:none}
+.chips button{font-size:13.5px;line-height:1.2;border:1px solid var(--line);background:var(--card);color:var(--ink-2);padding:6px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.chips button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--card)}
+.chips button:not([aria-pressed="true"]):hover{border-color:var(--base);color:var(--ink)}
+.vsep{width:1px;height:20px;background:var(--base);flex:none;margin:0 2px}
+.pbar .chip{flex:none;white-space:nowrap}
+.prange{margin-left:auto;font-size:12.5px;color:var(--ink-3);white-space:nowrap;padding-left:12px}
+@media (max-width:600px){.pbar-in{padding:7px 12px}.prange{display:none}}
+.chip[hidden]{display:none}
+.range{flex-basis:100%;text-align:right;font-size:12.5px;color:var(--ink-3)}
+
+/* grid of visuals */
+.grid{max-width:1360px;margin:0 auto;padding:16px 20px 8px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px 12px;min-width:0}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s7{grid-column:span 7}.s8{grid-column:span 8}
+@media (max-width:1100px){.s8,.s7,.s5,.s4.w{grid-column:span 12}.s3{grid-column:span 6}}
+@media (max-width:900px){.s4{grid-column:span 12}}
+@media (max-width:600px){
+  .s3{grid-column:span 6}
+  .card{padding:12px 12px 10px}
+  .kv{font-size:23px}
+  .kv small{font-size:13px;margin-left:3px}
+  .kd,.km{font-size:12px}
+  .km{gap:2px 10px}
+  .vrow .vv{font-size:18px}
+  .grid{padding:12px 12px 8px;gap:10px}
+  .bar-in{padding:14px 12px}
+  .slicer{justify-content:flex-start}
+  .range{text-align:left}
+  .seg button{padding:6px 11px}
+}
+.ch{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px}
+.ch h2{margin:0;font-size:14.5px;font-weight:620;line-height:1.35}
+.cs{font-size:12.5px;color:var(--ink-3)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:8px 0 0;padding:0;list-style:none;font-size:12.5px;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:7px}
+.key{display:inline-block;width:16px;height:2px;border-radius:2px;flex:none}
+.sq{display:inline-block;width:10px;height:10px;border-radius:2px;flex:none}
+.chart{position:relative;width:100%;margin-top:6px}
+.chart svg{display:block;max-width:100%;overflow:visible;touch-action:pan-y}
+.mini{margin:10px 0 0;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+
+/* KPI cards */
+.kpi{display:flex;flex-direction:column}
+.kl{font-size:13.5px;color:var(--ink-2)}
+.kl span{color:var(--ink-3);font-size:12.5px;margin-left:6px}
+.kv{font-size:30px;font-weight:600;line-height:1.2;margin-top:4px;letter-spacing:-.01em}
+.kv small{font-size:15px;font-weight:450;color:var(--ink-2);margin-left:5px;letter-spacing:0}
+.kd{font-size:13px;color:var(--ink-2);margin-top:2px}
+.kdp{white-space:nowrap;color:var(--ink-3)}
+.spark{height:38px;margin:8px 0 6px}
+.km{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--hair);padding-top:8px;margin-top:auto}
+.km b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.vrow{display:flex;align-items:baseline;gap:8px;margin-top:10px}
+.vrow .vn{flex:1;font-size:13.5px;color:var(--ink-2)}
+.vrow .vv{font-size:22px;font-weight:600;line-height:1.2}
+.vbar{height:6px;background:var(--band);border-radius:3px;margin-top:5px;overflow:hidden}
+.vbar i{display:block;height:100%;border-radius:0 3px 3px 0}
+
+/* svg */
+.ax{fill:var(--ink-3);font-size:11.5px;font-variant-numeric:tabular-nums}
+.grid-l{stroke:var(--hair);stroke-width:1;shape-rendering:crispEdges}
+.zero{stroke:var(--base);stroke-width:1;shape-rendering:crispEdges}
+.ln{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.dot{stroke:var(--card);stroke-width:2}
+.lbl{fill:var(--ink-2);font-size:12px;font-variant-numeric:tabular-nums}
+.lbl-s{fill:var(--ink);font-weight:600}
+.bandlbl{fill:var(--ink-3);font-size:11.5px}
+.xh{stroke:var(--xhair);stroke-width:1;shape-rendering:crispEdges}
+.dim{opacity:.28}
+.hitcol{cursor:pointer}
+
+/* tooltip */
+.tip{position:absolute;top:0;left:0;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:7px 11px 8px;font-size:12.5px;line-height:1.5;z-index:4;white-space:nowrap}
+.tip[hidden]{display:none}
+.tip .td{color:var(--ink-2);margin-bottom:2px}
+.tip .tr{display:flex;align-items:center;gap:8px}
+.tip .tk{width:14px;height:2px;border-radius:2px;flex:none}
+.tip .tv{font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums}
+.tip .tl{color:var(--ink-2)}
+
+/* tables */
+.tw{overflow:auto;margin-top:8px}
+.tw.scroll{max-height:430px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--hair);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;padding-left:2px}
+thead th{font-weight:600;color:var(--ink-2);font-size:12.5px;border-bottom-color:var(--base);position:sticky;top:0;background:var(--card);z-index:1}
+thead tr.grp th{border-bottom:0;padding-bottom:0;color:var(--ink);top:auto;position:static}
+thead tr.grp .gl{display:flex;align-items:center;justify-content:flex-end;gap:7px;border-bottom:1px solid var(--hair);padding-bottom:5px}
+th.gs,td.gs{padding-left:26px}
+tbody tr.mrow{cursor:pointer}
+tbody tr.mrow:hover td{background:var(--band)}
+tbody tr.on td{background:var(--sel)}
+tfoot td{font-weight:650;border-bottom:0;border-top:1px solid var(--base)}
+td.muted{color:var(--ink-3)}
+.db{display:inline-flex;align-items:center;justify-content:flex-end;gap:8px}
+.dbt{position:relative;display:inline-block;width:52px;height:8px;flex:none}
+.dbt::before{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--base)}
+.dbt i{position:absolute;top:1px;height:6px}
+.foot{margin:8px 0 0;font-size:12px;color:var(--ink-3)}
+.btn{font-size:12.5px;border:1px solid var(--base);background:transparent;color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+.btn:hover{background:var(--band)}
+
+@media (max-width:600px){.tw th:first-child,.tw td:first-child{position:sticky;left:0;background:var(--card);z-index:2}}
+footer{max-width:1360px;margin:0 auto;padding:6px 20px 32px;font-size:12.5px;color:var(--ink-3)}
+footer p{margin:0}
+@media (max-width:600px){footer{padding:6px 12px 28px}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <div class="brand">
+      <img class="logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f6f1e3'/%3E%3Cpath transform='translate(134.91 320) scale(0.30649 -0.30649)' fill='%2323262b' d='M99.31243896484375 0V96.56695556640625L195.59259033203125 106.56695556640625V110.0389404296875Q147.896484375 139.62298583984375 117.7283935546875 181.05508422851562Q87.560302734375 222.4871826171875 73.21224975585938 273.23931884765625Q58.86419677734375 323.991455078125 58.86419677734375 379.85565185546875Q58.86419677734375 475.07977294921875 97.54415893554688 548.663818359375Q136.22412109375 622.2478637695312 211.5560302734375 664.5118713378906Q286.887939453125 706.77587890625 396.07977294921875 706.77587890625Q507.9354248046875 706.77587890625 582.2953491210938 662.3599243164062Q656.6552734375 617.9439697265625 693.9753112792969 537.7359924316406Q731.2953491210938 457.52801513671875 731.2953491210938 349.41595458984375H590.6248779296875Q590.6248779296875 432.1680908203125 571.6087341308594 489.08831787109375Q552.5925903320312 546.008544921875 509.8803405761719 575.3447265625Q467.1680908203125 604.680908203125 396.07977294921875 604.680908203125Q326.0474853515625 604.680908203125 282.8352355957031 576.6087341308594Q239.62298583984375 548.5365600585938 219.57882690429688 495.8243103027344Q199.53466796875 443.112060546875 199.53466796875 368.13580322265625Q199.53466796875 290.2716064453125 226.93875122070312 232.85137939453125Q254.34283447265625 175.43115234375 303.9990539550781 144.12298583984375Q353.6552734375 112.8148193359375 419.79962158203125 112.8148193359375H688.1832885742188V0ZM292.4957275390625 349.9439697265625V770H364.991455078125V349.9439697265625ZM426.22412109375 349.9439697265625V770H498.7198486328125V349.9439697265625Z'/%3E%3Cpath d='M128 392H214L232 404L258 346L282 430L300 392H366' fill='none' stroke='%233b6ea8' stroke-width='20' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='384' cy='392' r='17' fill='%23b37a2e'/%3E%3C/svg%3E" alt="" width="44" height="44">
+      <div class="ttl">
+        <h1>ლარის პულსი</h1>
+        <p>ეროვნული ბანკის ოფიციალური კურსები: USD/GEL, EUR/GEL</p>
+      </div>
+    </div>
+    <div class="upd-top" id="upd-top"></div>
+  </div>
+</header>
+<div class="pbar">
+  <div class="pbar-in">
+    <div class="chips" role="group" aria-label="წელი" id="years"></div>
+    <span class="vsep" aria-hidden="true"></span>
+    <div class="chips" role="group" aria-label="ბოლო პერიოდი" id="rel"></div>
+    <button type="button" class="chip" id="chip" hidden aria-label="თვის ფილტრის მოხსნა"></button>
+    <span class="prange" id="prange" aria-live="polite"></span>
+  </div>
+</div>
+
+<main class="grid">
+  <section class="card kpi s3" aria-label="დოლარის კურსი">
+    <div class="kl">დოლარი<span>USD/GEL</span></div>
+    <div class="kv" id="kv-usd">—</div>
+    <div class="kd" id="kd-usd"></div>
+    <div class="spark" id="sp-usd"></div>
+    <div class="km" id="km-usd"></div>
+  </section>
+  <section class="card kpi s3" aria-label="ევროს კურსი">
+    <div class="kl">ევრო<span>EUR/GEL</span></div>
+    <div class="kv" id="kv-eur">—</div>
+    <div class="kd" id="kd-eur"></div>
+    <div class="spark" id="sp-eur"></div>
+    <div class="km" id="km-eur"></div>
+  </section>
+  <section class="card kpi s3" aria-label="ევრო დოლარში">
+    <div class="kl">ევრო დოლარში<span>EUR/USD</span></div>
+    <div class="kv" id="kv-x">—</div>
+    <div class="kd" id="kd-x"></div>
+    <div class="spark" id="sp-x"></div>
+    <div class="km" id="km-x"></div>
+  </section>
+  <section class="card kpi s3" aria-label="დღიური ვოლატილობა">
+    <div class="kl">დღიური ვოლატილობა</div>
+    <div class="cs">დღიური ცვლილების სტანდარტული გადახრა</div>
+    <div class="vrow"><span class="key" style="background:var(--usd)"></span><span class="vn">დოლარი</span><span class="vv" id="vv-usd">—</span></div>
+    <div class="vbar"><i id="vb-usd" style="background:var(--usd)"></i></div>
+    <div class="vrow"><span class="key" style="background:var(--eur)"></span><span class="vn">ევრო</span><span class="vv" id="vv-eur">—</span></div>
+    <div class="vbar"><i id="vb-eur" style="background:var(--eur)"></i></div>
+    <div class="km" id="vv-note" style="margin-top:12px"></div>
+  </section>
+
+  <section class="card s8" aria-labelledby="h-idx">
+    <div class="ch"><h2 id="h-idx">კურსის ცვლილება, %</h2><span class="cs">პერიოდის დასაწყისთან შედარებით</span></div>
+    <ul class="legend">
+      <li><span class="key" style="background:var(--usd)"></span>დოლარი</li>
+      <li><span class="key" style="background:var(--eur)"></span>ევრო</li>
+    </ul>
+    <div class="chart" id="ch-idx"></div>
+  </section>
+  <section class="card s4 w" aria-labelledby="h-mon">
+    <div class="ch"><h2 id="h-mon">თვიური ცვლილება, %</h2><span class="cs" id="mon-sub">დააჭირეთ თვეს ფილტრისთვის</span></div>
+    <ul class="legend">
+      <li><span class="sq" style="background:var(--usd)"></span>დოლარი</li>
+      <li><span class="sq" style="background:var(--eur)"></span>ევრო</li>
+    </ul>
+    <div class="chart" id="ch-mon"></div>
+  </section>
+
+  <section class="card s4" aria-labelledby="h-usd">
+    <div class="ch"><h2 id="h-usd">დოლარი, ₾</h2><span class="cs">USD/GEL</span></div>
+    <div class="chart" id="ch-usd"></div>
+  </section>
+  <section class="card s4" aria-labelledby="h-eur">
+    <div class="ch"><h2 id="h-eur">ევრო, ₾</h2><span class="cs">EUR/GEL</span></div>
+    <div class="chart" id="ch-eur"></div>
+  </section>
+  <section class="card s4" aria-labelledby="h-x">
+    <div class="ch"><h2 id="h-x">ევრო დოლარში</h2><span class="cs">EUR/USD = EUR/GEL ÷ USD/GEL</span></div>
+    <div class="chart" id="ch-x"></div>
+  </section>
+
+  <section class="card s8" aria-labelledby="h-day">
+    <div class="ch"><h2 id="h-day">დღიური ცვლილება, %</h2><span class="cs">ახალი კურსი წინასთან შედარებით, ერთ სკალაზე</span></div>
+    <p class="mini">დოლარი</p>
+    <div class="chart" id="ch-du"></div>
+    <p class="mini">ევრო</p>
+    <div class="chart" id="ch-de"></div>
+  </section>
+  <section class="card s4 w" aria-labelledby="h-wf">
+    <div class="ch"><h2 id="h-wf">ევროს ცვლილების დაშლა, ₾</h2><span class="cs" id="wf-sub"></span></div>
+    <ul class="legend">
+      <li><span class="sq" style="background:var(--usd)"></span>დოლარის ეფექტი</li>
+      <li><span class="sq" style="background:var(--cross)"></span>EUR/USD ეფექტი</li>
+      <li><span class="sq" style="background:var(--eur)"></span>ჯამი</li>
+    </ul>
+    <div class="chart" id="ch-wf"></div>
+  </section>
+
+  <section class="card s7" aria-labelledby="h-mat">
+    <div class="ch"><h2 id="h-mat">თვეების მიხედვით</h2><span class="cs">საშუალო კალენდარული დღეებით; დააჭირეთ სტრიქონს ფილტრისთვის</span></div>
+    <div class="tw mat"><table id="t-mat"></table></div>
+    <p class="foot" id="mat-foot"></p>
+  </section>
+  <section class="card s5" aria-labelledby="h-tab">
+    <div class="ch"><h2 id="h-tab">ოფიციალური კურსები</h2><button type="button" class="btn" id="csv">CSV</button></div>
+    <p class="cs" id="tab-sub" style="margin:2px 0 0"></p>
+    <div class="tw scroll"><table id="t-day"></table></div>
+  </section>
+</main>
+<footer>
+  <p>წყარო: <a href="https://nbg.gov.ge/monetary-policy/currency">საქართველოს ეროვნული ბანკი</a>. თარიღი — დღე, როცა კურსი ძალაშია; შაბათ-კვირასა და დასვენების დღეებში ბოლო დადგენილი კურსი მოქმედებს. <span id="upd"></span></p>
+</footer>
+
+<script id="nbg-data" type="application/json">[["2026-01-01",2.6963,3.1646],["2026-01-06",2.6968,3.1515],["2026-01-07",2.6974,3.1595],["2026-01-09",2.6982,3.1512],["2026-01-10",2.6971,3.1405],["2026-01-13",2.6967,3.1503],["2026-01-14",2.6969,3.1467],["2026-01-15",2.6975,3.1439],["2026-01-16",2.6961,3.1377],["2026-01-17",2.6957,3.1316],["2026-01-21",2.695,3.1604],["2026-01-22",2.695,3.155],["2026-01-23",2.6946,3.1497],["2026-01-24",2.6941,3.1607],["2026-01-27",2.6937,3.195],["2026-01-28",2.6932,3.2009],["2026-01-29",2.6927,3.2277],["2026-01-30",2.6922,3.2166],["2026-01-31",2.6908,3.2088],["2026-02-03",2.6902,3.1903],["2026-02-04",2.6893,3.1701],["2026-02-05",2.6883,3.1749],["2026-02-06",2.6876,3.1689],["2026-02-07",2.687,3.1688],["2026-02-10",2.6856,3.1857],["2026-02-11",2.6838,3.198],["2026-02-12",2.683,3.1984],["2026-02-13",2.6819,3.1853],["2026-02-14",2.6807,3.1782],["2026-02-17",2.6799,3.1802],["2026-02-18",2.6789,3.1724],["2026-02-19",2.6778,3.1692],["2026-02-20",2.6769,3.1566],["2026-02-21",2.676,3.148],["2026-02-24",2.6751,3.1561],["2026-02-25",2.6742,3.1521],["2026-02-26",2.674,3.1505],["2026-02-27",2.6741,3.1544],["2026-02-28",2.6759,3.1581],["2026-03-03",2.6922,3.1606],["2026-03-05",2.7234,3.1695],["2026-03-06",2.7419,3.1833],["2026-03-07",2.7362,3.1677],["2026-03-10",2.747,3.1755],["2026-03-11",2.7438,3.1924],["2026-03-12",2.73,3.1695],["2026-03-13",2.7321,3.1564],["2026-03-14",2.729,3.1261],["2026-03-17",2.7365,3.1382],["2026-03-18",2.7223,3.1336],["2026-03-19",2.7189,3.1376],["2026-03-20",2.7264,3.1283],["2026-03-21",2.7231,3.1471],["2026-03-24",2.7223,3.1274],["2026-03-25",2.7166,3.1483],["2026-03-26",2.7075,3.1402],["2026-03-27",2.7066,3.1277],["2026-03-28",2.7025,3.1114],["2026-03-31",2.6998,3.1032],["2026-04-01",2.7015,3.0967],["2026-04-02",2.6994,3.1318],["2026-04-03",2.6989,3.1083],["2026-04-04",2.6981,3.115],["2026-04-07",2.6975,3.114],["2026-04-08",2.697,3.1153],["2026-04-09",2.6965,3.1519],["2026-04-15",2.6963,3.18],["2026-04-16",2.6954,3.1757],["2026-04-17",2.6946,3.1734],["2026-04-18",2.6936,3.1771],["2026-04-21",2.6931,3.1687],["2026-04-22",2.6938,3.1679],["2026-04-23",2.6938,3.1652],["2026-04-24",2.6936,3.1464],["2026-04-25",2.6932,3.1505],["2026-04-28",2.693,3.1627],["2026-04-29",2.6925,3.1481],["2026-04-30",2.692,3.1499],["2026-05-01",2.6916,3.15],["2026-05-02",2.6908,3.1593],["2026-05-05",2.6899,3.1499],["2026-05-06",2.6892,3.1431],["2026-05-07",2.6883,3.1684],["2026-05-08",2.6874,3.1636],["2026-05-09",2.6859,3.16],["2026-05-12",2.6843,3.1594],["2026-05-14",2.6818,3.1404],["2026-05-15",2.6802,3.1374],["2026-05-16",2.6789,3.1201],["2026-05-19",2.6774,3.1146],["2026-05-20",2.6758,3.1079],["2026-05-21",2.6751,3.1034],["2026-05-22",2.675,3.1043],["2026-05-23",2.6744,3.102],["2026-05-26",2.6732,3.1124],["2026-05-28",2.6716,3.1095],["2026-05-29",2.6708,3.1003],["2026-05-30",2.6693,3.1079],["2026-06-02",2.6673,3.1071],["2026-06-03",2.666,3.1043],["2026-06-04",2.6653,3.096],["2026-06-05",2.6647,3.0996],["2026-06-06",2.6638,3.1012],["2026-06-09",2.6625,3.0683],["2026-06-10",2.6607,3.0779],["2026-06-11",2.6593,3.0723],["2026-06-12",2.6586,3.0646],["2026-06-13",2.6577,3.0768],["2026-06-16",2.6563,3.0848],["2026-06-17",2.6554,3.0835],["2026-06-18",2.6543,3.0787],["2026-06-19",2.6527,3.0408],["2026-06-20",2.6505,3.0377],["2026-06-23",2.6487,3.0351],["2026-06-24",2.648,3.02],["2026-06-25",2.6473,3.0026],["2026-06-26",2.6468,3.0033],["2026-06-27",2.6462,3.0177],["2026-06-30",2.6453,3.0156],["2026-07-01",2.6444,3.0141],["2026-07-02",2.6431,3.0123],["2026-07-03",2.6424,3.0144],["2026-07-04",2.6415,3.0237],["2026-07-07",2.6403,3.0147],["2026-07-08",2.6393,3.0167],["2026-07-09",2.6384,3.0109],["2026-07-10",2.6376,3.014],["2026-07-11",2.6371,3.0147],["2026-07-14",2.6359,3.0128],["2026-07-15",2.635,3.0026],["2026-07-16",2.6344,3.0072],["2026-07-17",2.6333,3.0191],["2026-07-18",2.6327,3.01],["2026-07-21",2.6315,3.0089],["2026-07-22",2.6301,3.0044],["2026-07-23",2.629,2.9984],["2026-07-24",2.6285,2.9975],["2026-07-25",2.6285,2.9931],["2026-07-28",2.6281,2.9955],["2026-07-29",2.6278,2.9849],["2026-07-30",2.6272,2.9916],["2026-07-31",2.6266,3.0159],["2026-08-01",2.6259,3.0206],["2026-08-04",2.6249,3.0239],["2026-08-05",2.6239,3.0219],["2026-08-06",2.6229,3.026],["2026-08-07",2.6223,3.0264],["2026-08-08",2.621,3.0212],["2026-08-11",2.6198,3.0274],["2026-08-12",2.6191,3.0214],["2026-08-13",2.6181,3.0205],["2026-08-14",2.6171,3.0191],["2026-08-15",2.6162,3.0233],["2026-08-18",2.6152,3.0315],["2026-08-19",2.6145,3.0265],["2026-08-20",2.6138,3.0349],["2026-08-21",2.613,3.0575],["2026-08-22",2.6125,3.0585],["2026-08-25",2.6121,3.0465],["2026-08-26",2.6153,3.05],["2026-08-27",2.6195,3.0551],["2026-08-28",2.6125,3.0412],["2026-09-01",2.6156,3.0333],["2026-09-02",2.625,3.0424],["2026-09-03",2.6205,3.0314],["2026-09-04",2.618,3.0366],["2026-09-05",2.6126,3.0364],["2026-09-08",2.6128,3.0374],["2026-09-09",2.6114,3.0318],["2026-09-10",2.6104,3.0364],["2026-09-11",2.6101,3.0342],["2026-09-12",2.6095,3.0247],["2026-09-15",2.6091,3.0112],["2026-09-16",2.6085,3.0097],["2026-09-17",2.6081,3.0084],["2026-09-18",2.6076,2.9927],["2026-09-19",2.6071,2.9911],["2026-09-22",2.6074,2.9941],["2026-09-23",2.6104,2.9933],["2026-09-24",2.6229,2.9925],["2026-09-25",2.6218,2.9807],["2026-09-26",2.608,2.9721],["2026-09-29",2.6055,2.9632],["2026-09-30",2.6051,2.9552],["2026-10-01",2.6047,2.9576],["2026-10-02",2.6042,2.9407],["2026-10-03",2.6039,2.9257],["2026-10-06",2.6032,2.9169],["2026-10-07",2.6025,2.9263],["2026-10-08",2.6021,2.9115],["2026-10-09",2.6019,2.91],["2026-10-10",2.6005,2.9154],["2026-10-13",2.5994,2.9066],["2026-10-14",2.5989,2.9074],["2026-10-16",2.5987,2.9129],["2026-10-17",2.5982,2.9274],["2026-10-20",2.5979,2.9128],["2026-10-21",2.5978,2.9127],["2026-10-22",2.5976,2.9163]]</script>
+<script>
+(() => {
+'use strict';
+
+/* ---------- data & formatting ---------- */
+const RAW = JSON.parse(document.getElementById('nbg-data').textContent);
+const DAY = 864e5, MINUS = '−', NS = 'http://www.w3.org/2000/svg';
+const M_SHORT = ['იან','თებ','მარ','აპრ','მაი','ივნ','ივლ','აგვ','სექ','ოქტ','ნოე','დეკ'];
+const M_NOM = ['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი','ივლისი','აგვისტო','სექტემბერი','ოქტომბერი','ნოემბერი','დეკემბერი'];
+const M_GEN = ['იანვრის','თებერვლის','მარტის','აპრილის','მაისის','ივნისის','ივლისის','აგვისტოს','სექტემბრის','ოქტომბრის','ნოემბრის','დეკემბრის'];
+
+const toT = k => Date.parse(k + 'T00:00:00Z');
+const iso = t => new Date(t).toISOString().slice(0, 10);
+const parts = t => { const d = new Date(t); return [d.getUTCDate(), d.getUTCMonth(), d.getUTCFullYear()]; };
+const fd = (t, names, withYear) => { const [d, m, y] = parts(t); return d + ' ' + names[m] + (withYear ? ' ' + y : ''); };
+const dShort = t => fd(t, M_SHORT);
+const dNom = (t, y) => fd(t, M_NOM, y);
+const dGen = t => fd(t, M_GEN);
+const pct = (f, d = 2) => { const s = Math.abs(f * 100).toFixed(d); return (+s === 0 ? '' : f > 0 ? '+' : MINUS) + s + '%'; };
+const pctAbs = (f, d = 2) => Math.abs(f * 100).toFixed(d) + '%';
+const sgn = (v, d) => { const s = Math.abs(v).toFixed(d); return (+s === 0 ? '' : v > 0 ? '+' : MINUS) + s; };
+const r4 = v => v.toFixed(4);
+const tickPct = (v, d) => { const s = String(+Math.abs(v).toFixed(d)); return (+s === 0 ? '' : v > 0 ? '+' : MINUS) + s + '%'; };
+const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
+const sd = a => { const m = mean(a); return Math.sqrt(mean(a.map(v => (v - m) * (v - m)))); };
+const $ = s => document.querySelector(s);
+
+/* data can be topped up after load (live fetch) and may span several years */
+const SNAP_LAST = RAW[RAW.length - 1][0];
+let ROWS, pubs, first, last, cal, MONTHS, YEARS, P;
+const addM = (t, n) => { const d = new Date(t); return Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + n, d.getUTCDate()); };
+
+function buildMonths() {
+  const groups = [];
+  let g = null;
+  cal.forEach((d, i) => {
+    const dt = new Date(d.t), y = dt.getUTCFullYear(), mo = dt.getUTCMonth(), key = y * 12 + mo;
+    if (!g || g.key !== key) { g = { key, y, mo, days: [], pi: i - 1 }; groups.push(g); }
+    g.days.push(d);
+  });
+  return groups.map(g => {
+    const prev = g.pi >= 0 ? cal[g.pi] : first;
+    const L = g.days[g.days.length - 1];
+    const dim = new Date(Date.UTC(g.y, g.mo + 1, 0)).getUTCDate();
+    return {
+      key: g.key, y: g.y, mo: g.mo, n: g.days.length, partial: g.days.length < dim, isFirst: g.pi < 0,
+      au: mean(g.days.map(d => d.usd)), ae: mean(g.days.map(d => d.eur)), lu: L.usd, le: L.eur,
+      cu: L.usd / prev.usd - 1, ce: L.eur / prev.eur - 1,
+      ms: g.days[0].t, st: g.pi >= 0 ? cal[g.pi].t : first.t, en: L.t
+    };
+  });
+}
+function setData(rows) {
+  ROWS = rows;
+  pubs = rows.map(([k, u, e]) => ({ k, t: toT(k), usd: u, eur: e, x: e / u }));
+  first = pubs[0]; last = pubs[pubs.length - 1];
+  cal = [];
+  for (let t = first.t, j = 0; t <= last.t; t += DAY) {
+    while (j + 1 < pubs.length && pubs[j + 1].t <= t) j++;
+    cal.push({ t, usd: pubs[j].usd, eur: pubs[j].eur });
+  }
+  MONTHS = buildMonths();
+  YEARS = buildYears();
+}
+function buildYears() {
+  const groups = [];
+  let g = null;
+  cal.forEach((d, i) => {
+    const y = new Date(d.t).getUTCFullYear();
+    if (!g || g.y !== y) { g = { y, days: [], pi: i - 1 }; groups.push(g); }
+    g.days.push(d);
+  });
+  return groups.map(g => {
+    const prev = g.pi >= 0 ? cal[g.pi] : first;
+    const L = g.days[g.days.length - 1];
+    return {
+      key: 'y' + g.y, y: g.y, n: g.days.length, partial: new Date(L.t + DAY).getUTCFullYear() === g.y,
+      cu: L.usd / prev.usd - 1, ce: L.eur / prev.eur - 1, lu: L.usd, le: L.eur, ms: g.days[0].t, en: L.t
+    };
+  });
+}
+function mergeRows(base, extra) {
+  const map = new Map(base.map(r => [r[0], r]));
+  extra.forEach(r => {
+    if (Array.isArray(r) && r.length === 3 && /^\d{4}-\d{2}-\d{2}$/.test(r[0]) && r[1] > 0 && r[2] > 0) map.set(r[0], [r[0], +r[1], +r[2]]);
+  });
+  return Array.from(map.values()).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+}
+const CACHE_KEY = 'lari-pulse:rates:v1';
+function loadCache() {
+  try { const a = JSON.parse(localStorage.getItem(CACHE_KEY) || '[]'); return Array.isArray(a) ? a.filter(r => Array.isArray(r) && r[0] > SNAP_LAST) : []; }
+  catch (e) { return []; }
+}
+function saveCache(rows) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(rows.filter(r => r[0] > SNAP_LAST))); } catch (e) { /* storage unavailable */ }
+}
+setData(mergeRows(RAW, loadCache()));
+
+function period(st, en) {
+  en = Math.min(en, last.t);
+  let bi = 0, ei = 0;
+  for (let i = 0; i < pubs.length; i++) { if (pubs[i].t <= st) bi = i; if (pubs[i].t <= en) ei = i; }
+  const base = pubs[bi], end = pubs[ei];
+  const pts = [Object.assign({}, base, { t: st })];
+  const ch = [];
+  for (let i = bi + 1; i <= ei; i++) {
+    const a = pubs[i - 1], b = pubs[i];
+    pts.push(b);
+    ch.push({ t: b.t, usd: b.usd / a.usd - 1, eur: b.eur / a.eur - 1, pu: b.usd, pe: b.eur });
+  }
+  if (end.t < en) pts.push(Object.assign({}, end, { t: en }));
+  return { st, en, bi, ei, base, end, pts, ch };
+}
+
+/* ---------- period: one or more consecutive years, or the last N months ---------- */
+const REL = [{ id: 'm1', label: '1 თვე', n: 1 }, { id: 'm3', label: '3 თვე', n: 3 }, { id: 'm6', label: '6 თვე', n: 6 }, { id: 'm12', label: '12 თვე', n: 12 }];
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const SL = { years: [], rel: null, month: null, st: 0, en: 0 };
+function dataYears() { const out = []; for (let y = parts(first.t)[2]; y <= parts(last.t)[2]; y++) out.push(y); return out; }
+function relList() { return REL.filter(p => addM(last.t, -p.n) > first.t + (p.n >= 12 ? 15 * DAY : 0)); }
+function yearSpan(a, b) { const out = []; for (let y = Math.min(a, b); y <= Math.max(a, b); y++) out.push(y); return out; }
+function defaultYears() {
+  const ys = dataYears(), ly = ys[ys.length - 1];
+  return last.t - Date.UTC(ly, 0, 1) < 30 * DAY && ys.length > 1 ? [ly - 1, ly] : [ly];
+}
+function resolveRange() {
+  const ys = dataYears();
+  SL.years = SL.years.filter(y => ys.includes(y));
+  if (SL.rel && !relList().some(p => p.id === SL.rel)) SL.rel = null;
+  if (!SL.rel && !SL.years.length) SL.years = defaultYears();
+  if (SL.rel) {
+    const p = REL.find(x => x.id === SL.rel);
+    SL.st = Math.max(first.t, addM(last.t, -p.n));
+    SL.en = last.t;
+  } else {
+    const y0 = Math.min.apply(null, SL.years), y1 = Math.max.apply(null, SL.years);
+    SL.st = y0 <= ys[0] ? first.t : Math.max(first.t, Date.UTC(y0 - 1, 11, 31)); /* previous year-end rate is the base */
+    SL.en = Math.min(last.t, Date.UTC(y1, 11, 31));
+  }
+}
+SL.years = defaultYears();
+let kbdToggle = false;
+resolveRange();
+P = period(SL.st, SL.en);
+/* a range that starts on a month's last day (its base rate) does not include that month */
+function visibleMonths() { return MONTHS.filter(r => (r.en > SL.st || r.ms === SL.st) && r.ms <= SL.en); }
+function visibleYears() { return YEARS.filter(r => (r.en > SL.st || r.ms === SL.st) && r.ms <= SL.en); }
+function monthName(r, short, rows) {
+  const multi = rows.some(x => x.y !== rows[0].y);
+  return (short ? M_SHORT : M_NOM)[r.mo] + (multi ? ' ' + (short ? String(r.y).slice(2) : r.y) : '');
+}
+
+/* ---------- helpers ---------- */
+function S(tag, attrs, parent, text) {
+  const n = document.createElementNS(NS, tag);
+  if (attrs) for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text != null) n.textContent = text;
+  if (parent) parent.appendChild(n);
+  return n;
+}
+function H(tag, cls, text, parent) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  if (parent) parent.appendChild(n);
+  return n;
+}
+function niceStep(span, count) {
+  const raw = span / Math.max(1, count);
+  const p = Math.pow(10, Math.floor(Math.log10(raw)));
+  const f = raw / p;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p;
+}
+function decimalsOf(v) { const s = String(+Math.abs(v).toPrecision(6)); return s.includes('.') ? s.split('.')[1].length : 0; }
+function yScale(lo, hi, count, withZero, padFrac) {
+  if (withZero) { lo = Math.min(lo, 0); hi = Math.max(hi, 0); }
+  if (hi - lo < 1e-9) { lo -= 0.01; hi += 0.01; }
+  const pad = (hi - lo) * (padFrac || 0.04);
+  lo -= pad; hi += pad;
+  const step = niceStep(hi - lo, count);
+  lo = Math.floor(lo / step + 1e-9) * step;
+  hi = Math.ceil(hi / step - 1e-9) * step;
+  const ticks = [];
+  for (let v = lo; v <= hi + step / 2; v += step) ticks.push(+v.toFixed(10));
+  return { lo, hi, ticks, dec: decimalsOf(step) };
+}
+function xTicks(x0, x1, pw) {
+  const span = (x1 - x0) / DAY, out = [];
+  if (span > 400) {
+    const years = [], mids = [];
+    for (let y = new Date(x0).getUTCFullYear(); y <= new Date(x1).getUTCFullYear(); y++) {
+      const t = Date.UTC(y, 0, 1), tm = Date.UTC(y, 6, 1);
+      if (t >= x0 && t <= x1) years.push({ t, label: String(y) });
+      if (span <= 3 * 366 && tm >= x0 && tm <= x1) mids.push({ t: tm, label: M_SHORT[6] });
+    }
+    let ticks = years.concat(mids).sort((a, b) => a.t - b.t);
+    if (ticks.length * 48 > pw) ticks = years;
+    if (ticks.length * 48 > pw) { const k = Math.ceil(ticks.length * 48 / pw); ticks = ticks.filter((_, i) => i % k === 0); }
+    return ticks;
+  } else if (span > 62) {
+    const d = new Date(x0), multiYear = d.getUTCFullYear() !== new Date(x1).getUTCFullYear();
+    let y = d.getUTCFullYear(), m = d.getUTCMonth() + (d.getUTCDate() > 1 ? 1 : 0);
+    for (let t = Date.UTC(y, m, 1); t <= x1; t = Date.UTC(y, ++m, 1)) {
+      const td = new Date(t), mm = td.getUTCMonth();
+      out.push({ t, label: M_SHORT[mm] + (multiYear && mm === 0 ? ' ' + String(td.getUTCFullYear()).slice(2) : '') });
+    }
+  } else {
+    const step = span > 31 ? 14 : 7;
+    for (let t = x0; t <= x1; t += step * DAY) out.push({ t, label: dShort(t) });
+  }
+  const need = out.length * 46;
+  if (need > pw) { const k = Math.ceil(need / pw); return out.filter((_, i) => i % k === 0); }
+  return out;
+}
+function fillTip(tip, title, rows) {
+  tip.textContent = '';
+  H('div', 'td', title, tip);
+  rows.forEach(r => {
+    const row = H('div', 'tr', null, tip);
+    const k = H('span', 'tk', null, row);
+    k.style.background = r.color;
+    H('span', 'tv', r.value, row);
+    if (r.label) H('span', 'tl', r.label, row);
+  });
+}
+function placeTip(tip, host, x, top) {
+  tip.hidden = false;
+  const tw = tip.offsetWidth, hw = host.clientWidth;
+  let left = x + 14;
+  if (left + tw > hw) left = x - 14 - tw;
+  if (left < 0) left = Math.max(0, Math.min(hw - tw, x - tw / 2));
+  tip.style.transform = 'translate(' + Math.round(left) + 'px,' + Math.round(top) + 'px)';
+}
+function barPath(x, y0, y1, w, rmax) {
+  const h = Math.abs(y1 - y0), r = w >= 4 ? Math.min(rmax || 2, w / 2, h) : 0;
+  if (!r) return 'M' + x + ',' + y0 + 'V' + y1 + 'h' + w + 'V' + y0 + 'Z';
+  const s = y1 < y0 ? 1 : -1;
+  return 'M' + x + ',' + y0 + 'V' + (y1 + s * r) + 'Q' + x + ',' + y1 + ' ' + (x + r) + ',' + y1 +
+    'H' + (x + w - r) + 'Q' + (x + w) + ',' + y1 + ' ' + (x + w) + ',' + (y1 + s * r) + 'V' + y0 + 'Z';
+}
+const renders = [];
+function mount(host, render) {
+  let w = 0;
+  new ResizeObserver(() => { const nw = host.clientWidth; if (nw && nw !== w) { w = nw; render(); } }).observe(host);
+  renders.push(render);
+}
+function nearestIndex(svg, W, xs, clientX) {
+  const r = svg.getBoundingClientRect();
+  const x = (clientX - r.left) * (W / r.width);
+  let a = 0, b = xs.length - 1;
+  while (b - a > 1) { const mid = (a + b) >> 1; if (xs[mid] < x) a = mid; else b = mid; }
+  return Math.abs(xs[a] - x) <= Math.abs(xs[b] - x) ? a : b;
+}
+function keyNav(svg, getCur, count, show, hide, onEnter) {
+  svg.addEventListener('keydown', e => {
+    let i = getCur() < 0 ? count - 1 : getCur();
+    if (e.key === 'ArrowLeft') i = Math.max(0, i - 1);
+    else if (e.key === 'ArrowRight') i = Math.min(count - 1, i + 1);
+    else if (e.key === 'Home') i = 0;
+    else if (e.key === 'End') i = count - 1;
+    else if (e.key === 'Escape') { hide(); return; }
+    else if ((e.key === 'Enter' || e.key === ' ') && onEnter) { e.preventDefault(); onEnter(i); return; }
+    else return;
+    e.preventDefault();
+    show(i);
+  });
+}
+
+/* ---------- line chart ---------- */
+function lineChart(host, cfg) {
+  const tip = H('div', 'tip', null, host);
+  tip.hidden = true;
+  let svg = null, cur = -1;
+  function render() {
+    const c = cfg();
+    const W = host.clientWidth;
+    if (!W) return;
+    const narrow = W < 520;
+    const Hh = narrow ? (c.hs || 220) : (c.h || 280);
+    const showEnd = !!c.endLabel && !narrow;
+    const m = { l: 46, r: showEnd ? 104 : c.extremes ? 64 : 12, t: 20, b: 26 };
+    const pw = W - m.l - m.r, ph = Hh - m.t - m.b;
+    const pts = c.pts, x0 = c.x0, x1 = c.x1;
+    let lo = Infinity, hi = -Infinity;
+    c.series.forEach(s => pts.forEach(p => { const v = s.val(p); if (v < lo) lo = v; if (v > hi) hi = v; }));
+    const ys = yScale(lo, hi, narrow ? 4 : 5, c.zero, c.extremes ? 0.2 : 0.04);
+    const sx = t => m.l + (x1 === x0 ? 0 : (t - x0) / (x1 - x0) * pw);
+    const sy = v => m.t + (ys.hi - v) / (ys.hi - ys.lo) * ph;
+    if (svg) svg.remove();
+    cur = -1;
+    svg = S('svg', { viewBox: '0 0 ' + W + ' ' + Hh, width: W, height: Hh, role: 'img', 'aria-label': c.aria, tabindex: 0 });
+    host.insertBefore(svg, tip);
+
+    (c.bands || []).forEach(b => {
+      const a = Math.max(b.from, x0), z = Math.min(b.to, x1);
+      if (z <= a) return;
+      S('rect', { x: sx(a), y: m.t, width: Math.max(1, sx(z) - sx(a)), height: ph, style: 'fill:var(--band)' }, svg);
+      S('text', { x: sx(a), y: m.t - 7, class: 'bandlbl' }, svg, b.label);
+    });
+    ys.ticks.forEach(v => {
+      const y = Math.round(sy(v)) + 0.5;
+      const isZero = c.zero && Math.abs(v) < 1e-9;
+      S('line', { x1: m.l, x2: W - m.r, y1: y, y2: y, class: isZero ? 'zero' : 'grid-l' }, svg);
+      S('text', { x: m.l - 7, y: y + 4, 'text-anchor': 'end', class: 'ax' }, svg, c.tick(v, ys.dec));
+    });
+    const yb = Math.round(m.t + ph) + 0.5;
+    S('line', { x1: m.l, x2: W - m.r, y1: yb, y2: yb, class: 'zero' }, svg);
+    xTicks(x0, x1, pw).forEach(tk => {
+      const x = sx(tk.t);
+      const anchor = x < m.l + 18 ? 'start' : x > W - 22 ? 'end' : 'middle';
+      S('text', { x: x, y: Hh - 7, 'text-anchor': anchor, class: 'ax' }, svg, tk.label);
+    });
+    c.series.forEach(s => {
+      let d = '';
+      pts.forEach((p, i) => { d += (i ? 'L' : 'M') + sx(p.t).toFixed(1) + ',' + sy(s.val(p)).toFixed(1); });
+      S('path', { d: d, class: 'ln', style: 'stroke:' + s.color }, svg);
+    });
+    const li = pts.length - 1, lp = pts[li];
+    if (c.extremes) {
+      c.series.forEach(s => {
+        let imin = 0, imax = 0;
+        pts.forEach((p, i) => { if (s.val(p) < s.val(pts[imin])) imin = i; if (s.val(p) > s.val(pts[imax])) imax = i; });
+        const isLastVal = i => Math.abs(s.val(pts[i]) - s.val(lp)) < 1e-12 && pts[i].t >= pts[li].t - 3 * DAY;
+        const mark = (i, above) => {
+          const p = pts[i], x = sx(p.t), y = sy(s.val(p));
+          S('circle', { cx: x, cy: y, r: 4, class: 'dot', style: 'fill:' + s.color }, svg);
+          const text = s.fmt(s.val(p)) + ' (' + dShort(p.t) + ')';
+          const fits = above ? y - 22 >= m.t - 16 : y + 19 <= m.t + ph - 4;
+          if (!fits) {
+            const right = x < m.l + 110;
+            S('text', { x: right ? x + 9 : x - 9, y: y + 4, 'text-anchor': right ? 'start' : 'end', class: 'lbl' }, svg, text);
+            return;
+          }
+          const anchor = x < m.l + 60 ? 'start' : x > W - m.r - 60 ? 'end' : 'middle';
+          const tx = anchor === 'start' ? x - 4 : anchor === 'end' ? x + 4 : x;
+          S('text', { x: tx, y: above ? y - 10 : y + 19, 'text-anchor': anchor, class: 'lbl' }, svg, text);
+        };
+        const maxIsLast = isLastVal(imax), minIsLast = isLastVal(imin);
+        if (!maxIsLast) mark(imax, true);
+        if (imin !== imax && !minIsLast) mark(imin, false);
+        const x = sx(lp.t), y = sy(s.val(lp));
+        S('circle', { cx: x, cy: y, r: 4, class: 'dot', style: 'fill:' + s.color }, svg);
+        const t = S('text', { x: x + 9, y: y + 4, class: 'lbl' }, svg);
+        S('tspan', { x: x + 9, class: 'lbl-s' }, t, s.fmt(s.val(lp)));
+        if (minIsLast || maxIsLast) S('tspan', { x: x + 9, dy: 14 }, t, minIsLast ? 'მინიმუმი' : 'მაქსიმუმი');
+      });
+    } else {
+      c.series.forEach(s => S('circle', { cx: sx(lp.t), cy: sy(s.val(lp)), r: 4, class: 'dot', style: 'fill:' + s.color }, svg));
+    }
+    if (showEnd) {
+      const labs = c.series.map(s => ({ s, y: sy(s.val(lp)) }));
+      const clash = labs.some((a, i) => labs.some((b, j) => j > i && Math.abs(a.y - b.y) < 32));
+      if (!clash) labs.forEach(L => {
+        const tx = sx(lp.t) + 11;
+        const t = S('text', { x: tx, y: L.y - 2, class: 'lbl' }, svg);
+        S('tspan', { x: tx, class: 'lbl-s' }, t, c.endLabel(L.s, lp));
+        S('tspan', { x: tx, dy: 15 }, t, L.s.name);
+      });
+    }
+    const xs = pts.map(p => sx(p.t));
+    const hov = S('g', { style: 'display:none' }, svg);
+    const xl = S('line', { y1: m.t, y2: m.t + ph, class: 'xh' }, hov);
+    const hd = c.series.map(s => S('circle', { r: 4.5, class: 'dot', style: 'fill:' + s.color }, hov));
+    const hit = S('rect', { x: m.l - 6, y: 0, width: pw + 12, height: Hh, fill: 'transparent' }, svg);
+    const show = i => {
+      cur = i;
+      const p = pts[i], x = xs[i];
+      hov.style.display = '';
+      xl.setAttribute('x1', x); xl.setAttribute('x2', x);
+      c.series.forEach((s, k) => { hd[k].setAttribute('cx', x); hd[k].setAttribute('cy', sy(s.val(p))); });
+      fillTip(tip, dNom(p.t, true), c.tip(p));
+      placeTip(tip, host, x, m.t);
+    };
+    const hide = () => { cur = -1; hov.style.display = 'none'; tip.hidden = true; };
+    hit.addEventListener('pointermove', e => show(nearestIndex(svg, W, xs, e.clientX)));
+    hit.addEventListener('pointerdown', e => show(nearestIndex(svg, W, xs, e.clientX)));
+    hit.addEventListener('pointerleave', hide);
+    svg.addEventListener('focus', () => show(cur >= 0 ? cur : xs.length - 1));
+    svg.addEventListener('blur', hide);
+    keyNav(svg, () => cur, xs.length, show, hide);
+  }
+  mount(host, render);
+}
+
+/* ---------- daily change bars ---------- */
+function barChart(host, cfg) {
+  const tip = H('div', 'tip', null, host);
+  tip.hidden = true;
+  let svg = null, cur = -1;
+  function render() {
+    const c = cfg();
+    const W = host.clientWidth;
+    if (!W) return;
+    const Hh = W < 520 ? 120 : 128;
+    const m = { l: 46, r: 12, t: 6, b: 24 };
+    const pw = W - m.l - m.r, ph = Hh - m.t - m.b;
+    const ch = c.ch, x0 = c.x0, x1 = c.x1;
+    const D = [0.1, 0.2, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10].find(d => d >= c.yMax * 1.04) || c.yMax * 1.1;
+    const tks = [-D, 0, D];
+    const dec = Math.max.apply(null, tks.map(decimalsOf));
+    const sx = t => m.l + (x1 === x0 ? 0 : (t - x0) / (x1 - x0) * pw);
+    const sy = v => m.t + (D - v) / (2 * D) * ph;
+    if (svg) svg.remove();
+    cur = -1;
+    svg = S('svg', { viewBox: '0 0 ' + W + ' ' + Hh, width: W, height: Hh, role: 'img', 'aria-label': c.aria, tabindex: 0 });
+    host.insertBefore(svg, tip);
+    [-D, -D / 2, 0, D / 2, D].forEach(v => {
+      const y = Math.round(sy(v)) + 0.5;
+      S('line', { x1: m.l, x2: W - m.r, y1: y, y2: y, class: v === 0 ? 'zero' : 'grid-l' }, svg);
+    });
+    tks.forEach(v => S('text', { x: m.l - 7, y: Math.round(sy(v)) + 4.5, 'text-anchor': 'end', class: 'ax' }, svg, tickPct(v, dec)));
+    xTicks(x0, x1, pw).forEach(tk => {
+      const x = sx(tk.t);
+      const anchor = x < m.l + 18 ? 'start' : x > W - 22 ? 'end' : 'middle';
+      S('text', { x: x, y: Hh - 6, 'text-anchor': anchor, class: 'ax' }, svg, tk.label);
+    });
+    const slot = pw / ((x1 - x0) / DAY + 1);
+    const bw = Math.max(1, Math.min(8, slot * 0.62));
+    const y0 = sy(0);
+    ch.forEach(d => {
+      const v = d[c.key] * 100;
+      if (Math.abs(sy(v) - y0) < 0.5) return;
+      S('path', { d: barPath(+(sx(d.t) - bw / 2).toFixed(2), y0, +sy(v).toFixed(2), +bw.toFixed(2), 2), style: 'fill:' + c.color }, svg);
+    });
+    const xs = ch.map(d => sx(d.t));
+    const hov = S('g', { style: 'display:none' }, svg);
+    const xl = S('line', { y1: m.t, y2: m.t + ph, class: 'xh' }, hov);
+    const hit = S('rect', { x: m.l - 6, y: 0, width: pw + 12, height: Hh, fill: 'transparent' }, svg);
+    const show = i => {
+      if (!xs.length) return;
+      cur = i;
+      const d = ch[i], x = xs[i];
+      hov.style.display = '';
+      xl.setAttribute('x1', x); xl.setAttribute('x2', x);
+      fillTip(tip, dNom(d.t, true), [
+        { color: 'var(--usd)', value: pct(d.usd), label: 'დოლარი, ' + r4(d.pu) },
+        { color: 'var(--eur)', value: pct(d.eur), label: 'ევრო, ' + r4(d.pe) }
+      ]);
+      placeTip(tip, host, x, 0);
+    };
+    const hide = () => { cur = -1; hov.style.display = 'none'; tip.hidden = true; };
+    hit.addEventListener('pointermove', e => xs.length && show(nearestIndex(svg, W, xs, e.clientX)));
+    hit.addEventListener('pointerdown', e => xs.length && show(nearestIndex(svg, W, xs, e.clientX)));
+    hit.addEventListener('pointerleave', hide);
+    svg.addEventListener('focus', () => xs.length && show(cur >= 0 ? cur : xs.length - 1));
+    svg.addEventListener('blur', hide);
+    keyNav(svg, () => cur, xs.length, show, hide);
+  }
+  mount(host, render);
+}
+
+/* ---------- monthly clustered columns (click = filter) ---------- */
+function monthChart(host) {
+  const tip = H('div', 'tip', null, host);
+  tip.hidden = true;
+  let svg = null, cur = -1;
+  function render() {
+    const W = host.clientWidth;
+    if (!W) return;
+    const Hh = W < 520 ? 220 : 280;
+    const m = { l: 46, r: 6, t: 14, b: 26 };
+    const pw = W - m.l - m.r, ph = Hh - m.t - m.b;
+    const months = visibleMonths();
+    const yearly = months.length > 24;
+    const rows = yearly ? visibleYears() : months;
+    $('#h-mon').textContent = yearly ? 'წლიური ცვლილება, %' : 'თვიური ცვლილება, %';
+    $('#mon-sub').textContent = yearly ? 'დააჭირეთ წელს ფილტრისთვის' : 'დააჭირეთ თვეს ფილტრისთვის';
+    const label = (r, short) => yearly ? String(r.y) : monthName(r, short, rows);
+    const isSel = r => yearly ? !SL.rel && SL.years.length === 1 && SL.years[0] === r.y : SL.month === r.key;
+    const anySel = rows.some(isSel);
+    const pick = r => { if (yearly) selectOnlyYear(r.y); else toggleMonth(r.key); };
+    const vals = [];
+    rows.forEach(r => vals.push(r.cu * 100, r.ce * 100));
+    const ys = yScale(Math.min.apply(null, vals), Math.max.apply(null, vals), 5, true, 0.06);
+    const sy = v => m.t + (ys.hi - v) / (ys.hi - ys.lo) * ph;
+    const band = pw / rows.length;
+    const bw = Math.max(3, Math.min(24, (band * 0.74 - 2) / 2));
+    const hadFocus = !!svg && document.activeElement === svg, prevCur = cur;
+    if (svg) svg.remove();
+    cur = -1;
+    svg = S('svg', { viewBox: '0 0 ' + W + ' ' + Hh, width: W, height: Hh, role: 'img', tabindex: 0,
+      'aria-label': (yearly ? 'წლიური' : 'თვიური') + ' ცვლილება: ' + rows.map(r => label(r, false) + ' დოლარი ' + pct(r.cu) + ', ევრო ' + pct(r.ce)).join('; ') });
+    host.insertBefore(svg, tip);
+    ys.ticks.forEach(v => {
+      const y = Math.round(sy(v)) + 0.5;
+      S('line', { x1: m.l, x2: W - m.r, y1: y, y2: y, class: Math.abs(v) < 1e-9 ? 'zero' : 'grid-l' }, svg);
+      S('text', { x: m.l - 7, y: y + 4, 'text-anchor': 'end', class: 'ax' }, svg, tickPct(v, ys.dec));
+    });
+    const y0 = sy(0);
+    const cxs = [];
+    rows.forEach((r, i) => {
+      const cx = m.l + band * i + band / 2;
+      cxs.push(cx);
+      const g = S('g', anySel && !isSel(r) ? { class: 'dim' } : {}, svg);
+      [[r.cu, 'var(--usd)', -1], [r.ce, 'var(--eur)', 1]].forEach(([v, col, side]) => {
+        const x = side < 0 ? cx - 1 - bw : cx + 1;
+        const y1 = sy(v * 100);
+        if (Math.abs(y1 - y0) >= 0.5) S('path', { d: barPath(+x.toFixed(2), y0, +y1.toFixed(2), +bw.toFixed(2), 4), style: 'fill:' + col }, g);
+      });
+      if (band >= 30 || i % 2 === rows.length % 2) S('text', { x: cx, y: Hh - 7, 'text-anchor': 'middle', class: 'ax' }, svg, label(r, true));
+    });
+    const hov = S('rect', { y: m.t, height: ph, width: band, style: 'fill:var(--band);display:none' }, svg);
+    svg.insertBefore(hov, svg.firstChild);
+    const show = i => {
+      cur = i;
+      const r = rows[i];
+      hov.setAttribute('x', m.l + band * i); hov.style.display = '';
+      fillTip(tip, label(r, false) + (r.partial ? ' (' + r.n + ' დღე)' : ''), [
+        { color: 'var(--usd)', value: pct(r.cu), label: 'დოლარი, ' + r4(r.lu) },
+        { color: 'var(--eur)', value: pct(r.ce), label: 'ევრო, ' + r4(r.le) }
+      ]);
+      placeTip(tip, host, cxs[i], m.t);
+    };
+    const hide = () => { cur = -1; hov.style.display = 'none'; tip.hidden = true; };
+    rows.forEach((r, i) => {
+      const h = S('rect', { x: m.l + band * i, y: 0, width: band, height: Hh, fill: 'transparent', class: 'hitcol' }, svg);
+      h.addEventListener('pointerenter', () => show(i));
+      h.addEventListener('pointerdown', () => show(i));
+      h.addEventListener('click', () => pick(r));
+    });
+    svg.addEventListener('pointerleave', hide);
+    svg.addEventListener('focus', () => show(cur >= 0 ? cur : rows.length - 1));
+    svg.addEventListener('blur', hide);
+    keyNav(svg, () => cur, rows.length, show, hide, i => { kbdToggle = true; pick(rows[i]); kbdToggle = false; });
+    if (hadFocus && kbdToggle) { svg.focus({ preventScroll: true }); show(prevCur >= 0 ? prevCur : rows.length - 1); }
+  }
+  mount(host, render);
+}
+
+/* ---------- waterfall: EUR/GEL change split into two effects ---------- */
+function waterfall(host) {
+  function render() {
+    const W = host.clientWidth;
+    if (!W) return;
+    host.textContent = '';
+    const Hh = W < 520 ? 230 : 300;
+    const m = { l: 50, r: 8, t: 26, b: 30 };
+    const pw = W - m.l - m.r, ph = Hh - m.t - m.b;
+    const b = P.base, e = P.end;
+    /* exact split of a product: ΔE = ΔU·(X0+X1)/2 + ΔX·(U0+U1)/2 */
+    const cu = (e.usd - b.usd) * (b.x + e.x) / 2;
+    const cx = (e.x - b.x) * (b.usd + e.usd) / 2;
+    const tot = cu + cx;
+    const steps = [
+      { label: 'დოლარი/ლარი', a: 0, z: cu, v: cu, color: 'var(--usd)', share: true },
+      { label: 'ევრო/დოლარი', a: cu, z: tot, v: cx, color: 'var(--cross)', share: true },
+      { label: 'ჯამი', a: 0, z: tot, v: tot, color: 'var(--eur)', share: false }
+    ];
+    const all = [0, cu, tot];
+    const ys = yScale(Math.min.apply(null, all), Math.max.apply(null, all), 4, true, 0.16);
+    const sy = v => m.t + (ys.hi - v) / (ys.hi - ys.lo) * ph;
+    const band = pw / steps.length;
+    const bw = Math.min(24, band * 0.5);
+    const svg = S('svg', { viewBox: '0 0 ' + W + ' ' + Hh, width: W, height: Hh, role: 'img',
+      'aria-label': 'ევროს ცვლილება ლარში ' + sgn(tot, 4) + ': დოლარის ეფექტი ' + sgn(cu, 4) + ', EUR/USD ეფექტი ' + sgn(cx, 4) }, host);
+    ys.ticks.forEach(v => {
+      const y = Math.round(sy(v)) + 0.5;
+      S('line', { x1: m.l, x2: W - m.r, y1: y, y2: y, class: Math.abs(v) < 1e-12 ? 'zero' : 'grid-l' }, svg);
+      S('text', { x: m.l - 7, y: y + 4, 'text-anchor': 'end', class: 'ax' }, svg, sgn(v, ys.dec));
+    });
+    steps.forEach((s, i) => {
+      const cxm = m.l + band * i + band / 2, x = cxm - bw / 2;
+      const ya = sy(s.a), yz = sy(s.z);
+      if (Math.abs(yz - ya) >= 0.5) S('path', { d: barPath(+x.toFixed(2), +ya.toFixed(2), +yz.toFixed(2), +bw.toFixed(2), 4), style: 'fill:' + s.color }, svg);
+      if (i < steps.length - 1) {
+        const yc = Math.round(sy(s.z)) + 0.5;
+        S('line', { x1: x + bw, x2: m.l + band * (i + 1) + band / 2 - bw / 2, y1: yc, y2: yc, class: 'zero' }, svg);
+      }
+      const down = s.z < s.a || (s.z === s.a && s.v < 0);
+      const ly = down ? Math.max(ya, yz) + 16 : Math.min(ya, yz) - 8;
+      const t = S('text', { x: cxm, y: ly, 'text-anchor': 'middle', class: 'lbl' }, svg);
+      S('tspan', { class: 'lbl-s' }, t, sgn(s.v, 3));
+      if (s.share && cu * cx > 0) S('tspan', { dx: 5 }, t, '(' + Math.round(s.v / tot * 100) + '%)');
+      S('text', { x: cxm, y: Hh - 8, 'text-anchor': 'middle', class: 'ax' }, svg, s.label);
+    });
+    $('#wf-sub').textContent = 'EUR/GEL: ' + r4(b.eur) + ' → ' + r4(e.eur);
+  }
+  mount(host, render);
+}
+
+/* ---------- sparklines ---------- */
+function spark(host, key, color) {
+  mount(host, () => {
+    const W = host.clientWidth;
+    if (!W) return;
+    host.textContent = '';
+    const Hh = 38, pts = P.pts;
+    const vals = pts.map(p => p[key]);
+    const lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), span = (hi - lo) || 1;
+    const sx = t => 2 + (t - P.st) / ((P.en - P.st) || 1) * (W - 8);
+    const sy = v => 4 + (hi - v) / span * (Hh - 8);
+    const svg = S('svg', { viewBox: '0 0 ' + W + ' ' + Hh, width: W, height: Hh, 'aria-hidden': 'true' }, host);
+    let d = '';
+    pts.forEach((p, i) => { d += (i ? 'L' : 'M') + sx(p.t).toFixed(1) + ',' + sy(p[key]).toFixed(1); });
+    const lp = pts[pts.length - 1];
+    S('path', { d: d + 'L' + sx(lp.t).toFixed(1) + ',' + Hh + 'L' + sx(pts[0].t).toFixed(1) + ',' + Hh + 'Z', style: 'fill:' + color + ';opacity:.10' }, svg);
+    S('path', { d: d, class: 'ln', style: 'stroke:' + color + ';stroke-width:1.5' }, svg);
+    S('circle', { cx: sx(lp.t), cy: sy(lp[key]), r: 3, class: 'dot', style: 'fill:' + color }, svg);
+  });
+}
+
+/* ---------- KPI cards ---------- */
+function renderKPIs() {
+  const b = P.base, e = P.end;
+  const span = '(' + dShort(P.st) + ' → ' + dShort(P.en) + ')';
+  const card = (id, key, unit, digits) => {
+    const f = e[key] / b[key] - 1;
+    const el = $('#kv-' + id);
+    el.textContent = e[key].toFixed(digits);
+    H('small', null, unit, el);
+    const kd = $('#kd-' + id);
+    kd.textContent = (f < 0 ? '▼ ' : f > 0 ? '▲ ' : '') + pctAbs(f) + ' ';
+    H('span', 'kdp', span, kd);
+    const vals = P.pts.map(p => p[key]);
+    const km = $('#km-' + id);
+    km.textContent = '';
+    [['მინ.', Math.min.apply(null, vals)], ['მაქს.', Math.max.apply(null, vals)]].forEach(([l, v]) => {
+      const s = H('span', null, l + ' ', km);
+      H('b', null, v.toFixed(digits), s);
+    });
+  };
+  card('usd', 'usd', '₾', 4);
+  card('eur', 'eur', '₾', 4);
+  card('x', 'x', '$', 4);
+  const ch = P.ch;
+  if (ch.length >= 2) {
+    const su = sd(ch.map(d => d.usd)), se = sd(ch.map(d => d.eur)), mx = Math.max(su, se) || 1;
+    $('#vv-usd').textContent = pctAbs(su);
+    $('#vv-eur').textContent = pctAbs(se);
+    $('#vb-usd').style.width = (su / mx * 100).toFixed(1) + '%';
+    $('#vb-eur').style.width = (se / mx * 100).toFixed(1) + '%';
+    const r = se / su;
+    $('#vv-note').textContent = r >= 1.15 ? 'ევრო ' + r.toFixed(1) + '‑ჯერ უფრო მერყევია'
+      : r <= 0.87 ? 'დოლარი ' + (1 / r).toFixed(1) + '‑ჯერ უფრო მერყევია' : 'რყევა მსგავსია';
+  } else {
+    $('#vv-usd').textContent = '—'; $('#vv-eur').textContent = '—';
+    $('#vb-usd').style.width = '0'; $('#vb-eur').style.width = '0';
+    $('#vv-note').textContent = 'პერიოდში ცვლილება ცოტაა';
+  }
+}
+
+/* ---------- matrix: months ---------- */
+function dataBar(td, v, max, color, text, noBar) {
+  const w = H('span', 'db', null, td);
+  H('span', null, text, w);
+  const tr = H('span', 'dbt', null, w);
+  if (noBar) { tr.style.visibility = 'hidden'; return; }
+  const i = H('i', null, null, tr);
+  const len = Math.min(50, Math.abs(v) / max * 50);
+  i.style.background = color;
+  i.style.width = len.toFixed(2) + '%';
+  if (v < 0) { i.style.right = '50%'; i.style.borderRadius = '2px 0 0 2px'; }
+  else { i.style.left = '50%'; i.style.borderRadius = '0 2px 2px 0'; }
+}
+function renderMatrix() {
+  const tb = $('#t-mat');
+  tb.textContent = '';
+  const thead = H('thead', null, null, tb);
+  const g = H('tr', 'grp', null, thead);
+  H('th', null, '', g);
+  [['დოლარი, USD/GEL', 'var(--usd)'], ['ევრო, EUR/GEL', 'var(--eur)']].forEach(([n, c], gi) => {
+    const th = H('th', gi ? 'gs' : null, null, g); th.colSpan = 3;
+    const gl = H('span', 'gl', null, th);
+    const k = H('span', 'key', null, gl); k.style.background = c;
+    gl.appendChild(document.createTextNode(n));
+  });
+  const hr = H('tr', null, null, thead);
+  ['თვე', 'საშუალო', 'ბოლო', 'ცვლილება', 'საშუალო', 'ბოლო', 'ცვლილება'].forEach((t, i) => H('th', i === 4 ? 'gs' : null, t, hr));
+  const rows = visibleMonths();
+  const max = Math.max.apply(null, rows.map(r => Math.max(Math.abs(r.cu), Math.abs(r.ce)))) || 1;
+  const body = H('tbody', null, null, tb);
+  const notes = [];
+  rows.forEach(r => {
+    const on = SL.month === r.key;
+    const tr = H('tr', 'mrow' + (on ? ' on' : ''), null, body);
+    tr.tabIndex = 0;
+    tr.dataset.key = r.key;
+    tr.setAttribute('aria-selected', String(on));
+    let name = monthName(r, false, rows);
+    if (r.isFirst) { name += '¹'; notes[0] = '¹ ' + M_GEN[r.mo] + ' ცვლილება — ' + dGen(first.t) + ' კურსთან.'; }
+    if (r.partial && r.en === last.t) { name += '²'; notes[1] = '² მიმდინარე თვე, ' + r.n + ' დღე.'; }
+    H('td', null, name, tr);
+    H('td', null, r4(r.au), tr); H('td', null, r4(r.lu), tr); dataBar(H('td', null, null, tr), r.cu, max, 'var(--usd)', pct(r.cu));
+    H('td', 'gs', r4(r.ae), tr); H('td', null, r4(r.le), tr); dataBar(H('td', null, null, tr), r.ce, max, 'var(--eur)', pct(r.ce));
+    tr.addEventListener('click', () => toggleMonth(r.key));
+    tr.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMonth(r.key); } });
+  });
+  const C = period(SL.st, SL.en);
+  const days = cal.filter(d => d.t >= C.st && d.t <= C.en);
+  const tf = H('tfoot', null, null, tb), tr = H('tr', null, null, tf);
+  H('td', null, 'სულ', tr);
+  H('td', null, r4(mean(days.map(d => d.usd))), tr); H('td', null, r4(C.end.usd), tr); dataBar(H('td', null, null, tr), 0, 1, '', pct(C.end.usd / C.base.usd - 1), true);
+  H('td', 'gs', r4(mean(days.map(d => d.eur))), tr); H('td', null, r4(C.end.eur), tr); dataBar(H('td', null, null, tr), 0, 1, '', pct(C.end.eur / C.base.eur - 1), true);
+  $('#mat-foot').textContent = notes.filter(Boolean).join(' ');
+}
+
+/* ---------- daily table + CSV ---------- */
+function dayRows() {
+  const rows = [];
+  for (let i = P.bi; i <= P.ei; i++) {
+    const p = pubs[i], q = pubs[i - 1];
+    rows.push({ p, du: q ? p.usd / q.usd - 1 : null, de: q ? p.eur / q.eur - 1 : null });
+  }
+  return rows;
+}
+function renderDays() {
+  const tb = $('#t-day');
+  tb.textContent = '';
+  const hr = H('tr', null, null, H('thead', null, null, tb));
+  ['თარიღი', 'USD/GEL', 'ცვლ.', 'EUR/GEL', 'ცვლ.'].forEach(t => H('th', null, t, hr));
+  const body = H('tbody', null, null, tb);
+  const rows = dayRows();
+  rows.slice().reverse().forEach(r => {
+    const tr = H('tr', null, null, body);
+    H('td', null, dShort(r.p.t), tr);
+    H('td', null, r4(r.p.usd), tr);
+    H('td', r.du == null ? 'muted' : null, r.du == null ? '—' : pct(r.du), tr);
+    H('td', null, r4(r.p.eur), tr);
+    H('td', r.de == null ? 'muted' : null, r.de == null ? '—' : pct(r.de), tr);
+  });
+  $('#tab-sub').textContent = rows.length + ' კურსი, ' + dNom(P.st) + ' – ' + dNom(P.en, true);
+}
+function downloadCSV() {
+  const lines = ['valid_from,usd_gel,eur_gel,eur_usd'];
+  dayRows().forEach(r => lines.push([r.p.k, r4(r.p.usd), r4(r.p.eur), r.p.x.toFixed(5)].join(',')));
+  const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'nbg-usd-eur-gel_' + iso(P.st) + '_' + iso(P.en) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
+
+/* ---------- visuals ---------- */
+const MARCH = [{ from: toT('2026-02-28'), to: toT('2026-03-10'), label: 'მარტის ნახტომი' }];
+lineChart($('#ch-idx'), () => ({
+  pts: P.pts, x0: P.st, x1: P.en, zero: true, h: 280, hs: 220, bands: MARCH,
+  aria: 'კურსის ცვლილება ' + dGen(P.st) + ' შემდეგ: დოლარი ' + pct(P.end.usd / P.base.usd - 1) + ', ევრო ' + pct(P.end.eur / P.base.eur - 1),
+  series: [
+    { name: 'დოლარი', color: 'var(--usd)', val: p => (p.usd / P.base.usd - 1) * 100 },
+    { name: 'ევრო', color: 'var(--eur)', val: p => (p.eur / P.base.eur - 1) * 100 }
+  ],
+  tick: tickPct,
+  endLabel: (s, p) => pct(s.val(p) / 100),
+  tip: p => [
+    { color: 'var(--usd)', value: pct(p.usd / P.base.usd - 1), label: 'დოლარი, ' + r4(p.usd) },
+    { color: 'var(--eur)', value: pct(p.eur / P.base.eur - 1), label: 'ევრო, ' + r4(p.eur) }
+  ]
+}));
+monthChart($('#ch-mon'));
+const absChart = (id, key, color, name, unit) => lineChart($(id), () => ({
+  pts: P.pts, x0: P.st, x1: P.en, extremes: true, h: 200, hs: 200,
+  aria: name + ', ' + dGen(P.st) + ' შემდეგ, ბოლო ' + r4(P.end[key]),
+  series: [{ name, color, val: p => p[key], fmt: v => r4(v) }],
+  tick: (v, d) => v.toFixed(Math.max(2, d)),
+  tip: p => [{ color, value: r4(p[key]) + ' ' + unit, label: pct(p[key] / P.base[key] - 1) }]
+}));
+absChart('#ch-usd', 'usd', 'var(--usd)', 'დოლარი ლარში', '₾');
+absChart('#ch-eur', 'eur', 'var(--eur)', 'ევრო ლარში', '₾');
+absChart('#ch-x', 'x', 'var(--cross)', 'ევრო დოლარში', '$');
+const yMaxCh = () => Math.max(0.05, ...P.ch.map(d => Math.max(Math.abs(d.usd), Math.abs(d.eur)) * 100));
+barChart($('#ch-du'), () => ({ ch: P.ch, x0: P.st, x1: P.en, key: 'usd', color: 'var(--usd)', yMax: yMaxCh(), aria: 'დოლარის დღიური ცვლილებები, %' }));
+barChart($('#ch-de'), () => ({ ch: P.ch, x0: P.st, x1: P.en, key: 'eur', color: 'var(--eur)', yMax: yMaxCh(), aria: 'ევროს დღიური ცვლილებები, %' }));
+waterfall($('#ch-wf'));
+spark($('#sp-usd'), 'usd', 'var(--usd)');
+spark($('#sp-eur'), 'eur', 'var(--eur)');
+spark($('#sp-x'), 'x', 'var(--cross)');
+
+/* ---------- period bar ---------- */
+let barSig = '';
+function renderBar() {
+  const ys = dataYears(), rl = relList();
+  const sig = ys.join(',') + '|' + rl.map(p => p.id).join(',');
+  const yb = $('#years'), rb = $('#rel');
+  if (sig !== barSig) {
+    barSig = sig;
+    yb.textContent = '';
+    rb.textContent = '';
+    ys.forEach(y => { const b = H('button', null, String(y), yb); b.type = 'button'; b.dataset.y = y; b.addEventListener('click', () => clickYear(y)); });
+    rl.forEach(p => { const b = H('button', null, p.label, rb); b.type = 'button'; b.dataset.r = p.id; b.addEventListener('click', () => clickRel(p.id)); });
+  }
+  yb.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(!SL.rel && SL.years.includes(+b.dataset.y))));
+  rb.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(SL.rel === b.dataset.r)));
+}
+function clickYear(y) {
+  SL.month = null;
+  if (SL.rel) { SL.rel = null; SL.years = [y]; }
+  else {
+    const y0 = Math.min.apply(null, SL.years), y1 = Math.max.apply(null, SL.years);
+    if (!SL.years.includes(y)) SL.years = yearSpan(Math.min(y, y0), Math.max(y, y1)); /* add: keep the years consecutive */
+    else if (SL.years.length > 1) SL.years = y === y0 ? yearSpan(y0 + 1, y1) : y === y1 ? yearSpan(y0, y1 - 1) : [y];
+  }
+  apply();
+}
+function clickRel(id) {
+  SL.month = null;
+  if (SL.rel === id) { SL.rel = null; SL.years = defaultYears(); } else SL.rel = id;
+  apply();
+}
+function selectOnlyYear(y) {
+  SL.rel = null;
+  SL.month = null;
+  SL.years = SL.years.length === 1 && SL.years[0] === y ? dataYears() : [y];
+  apply();
+}
+function apply() {
+  resolveRange();
+  let r = null;
+  if (SL.month !== null) { r = MONTHS.find(x => x.key === SL.month) || null; if (!r) SL.month = null; }
+  P = r ? period(r.st, r.en) : period(SL.st, SL.en);
+  renderBar();
+  const chip = $('#chip');
+  chip.hidden = !r;
+  if (r) chip.textContent = monthName(r, false, visibleMonths()) + ' \u2715';
+  /* label shows the chosen calendar span; KPI deltas show the base date the change is measured from */
+  const from = SL.rel ? P.st : Math.max(first.t, Date.UTC(Math.min.apply(null, SL.years), 0, 1));
+  const sameYear = parts(from)[2] === parts(P.en)[2];
+  $('#prange').textContent = r ? M_NOM[r.mo] + ' ' + r.y : (sameYear ? dShort(from) : dNom(from, true)) + ' – ' + dNom(P.en, true);
+  const upd = 'ბოლო კურსი: ' + dNom(last.t, true);
+  $('#upd').textContent = upd + '.';
+  $('#upd-top').textContent = upd;
+  renderKPIs();
+  renderMatrix();
+  renderDays();
+  renders.forEach(f => f());
+}
+function toggleMonth(key) {
+  const ae = document.activeElement;
+  const fromRow = !!(ae && ae.classList && ae.classList.contains('mrow'));
+  SL.month = SL.month === key ? null : key;
+  apply();
+  if (fromRow) { const row = document.querySelector('#t-mat tr.mrow[data-key="' + key + '"]'); if (row) row.focus({ preventScroll: true }); }
+}
+$('#chip').addEventListener('click', () => { SL.month = null; apply(); });
+$('#csv').addEventListener('click', downloadCSV);
+
+/* ---------- live top-up: fetch rates newer than the embedded snapshot ---------- */
+const API = 'https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/en/json/?currencies=USD&currencies=EUR&date=';
+async function fetchDay(ds) {
+  const ctrl = new AbortController();
+  const tm = setTimeout(() => ctrl.abort(), 12000);
+  try {
+    const r = await fetch(API + ds, { signal: ctrl.signal, cache: 'no-store' });
+    if (!r.ok) return null;
+    const j = await r.json();
+    const c = (j && j[0] && j[0].currencies) || [];
+    const u = c.find(x => x.code === 'USD'), e = c.find(x => x.code === 'EUR');
+    if (!u || !e || u.quantity !== 1 || e.quantity !== 1) return null;
+    return [String(u.validFromDate).slice(0, 10), +(+u.rate).toFixed(4), +(+e.rate).toFixed(4)];
+  } catch (err) {
+    return null;
+  } finally {
+    clearTimeout(tm);
+  }
+}
+async function topUp() {
+  const now = new Date(Date.now() + 4 * 3600e3); /* Tbilisi, UTC+4 */
+  const target = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) + DAY; /* tomorrow's rate is published ~17:00 */
+  const lastK = ROWS[ROWS.length - 1][0];
+  const dates = [];
+  for (let t = toT(lastK) + DAY; t <= target; t += DAY) dates.push(iso(t));
+  if (!dates.length) return;
+  const todo = dates.slice(-400);
+  const got = [];
+  let i = 0;
+  const worker = async () => { while (i < todo.length) { const row = await fetchDay(todo[i++]); if (row && row[0] > lastK) got.push(row); } };
+  await Promise.all(Array.from({ length: Math.min(6, todo.length) }, worker));
+  if (!got.length) return;
+  const merged = mergeRows(ROWS, got);
+  if (merged.length === ROWS.length) return;
+  saveCache(merged);
+  setData(merged);
+  apply();
+}
+
+apply();
+topUp();
+})();
+</script>
+</body>
+</html>
