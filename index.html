@@ -68,6 +68,9 @@ html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--canvas);color:var(--ink);font-family:"Noto Sans Georgian","DejaVu Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.5}
 a{color:inherit;text-decoration-color:var(--base);text-underline-offset:3px}
 :focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:3px}
+/* charts and table rows are focusable for keyboard use only: no ring or tap flash on touch/mouse */
+.chart svg,tr.mrow{outline:none;-webkit-tap-highlight-color:transparent}
+html.kbd .chart svg:focus,html.kbd tr.mrow:focus{outline:2px solid var(--ink);outline-offset:4px}
 button{font:inherit}
 
 /* title bar + slicer */
@@ -136,7 +139,7 @@ tfoot td{position:sticky;bottom:0;background:var(--card)}
 /* KPI cards */
 .kpi{display:flex;flex-direction:column}
 .kl{font-size:13.5px;color:var(--ink-2)}
-.kl span{color:var(--ink-3);font-size:12.5px;margin-left:6px}
+.kl .code{color:var(--ink-3);font-size:12.5px;margin-left:6px}
 .kv{font-size:30px;font-weight:600;line-height:1.2;margin-top:4px;letter-spacing:-.01em}
 .kv small{font-size:15px;font-weight:450;color:var(--ink-2);margin-left:5px;letter-spacing:0}
 .kd{font-size:13px;color:var(--ink-2);margin-top:2px}
@@ -156,7 +159,7 @@ tfoot td{position:sticky;bottom:0;background:var(--card)}
 .zero{stroke:var(--base);stroke-width:1;shape-rendering:crispEdges}
 .ln{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
 .dot{stroke:var(--card);stroke-width:2}
-.lbl{fill:var(--ink-2);font-size:12px;font-variant-numeric:tabular-nums}
+.lbl{fill:var(--ink-2);font-size:12px;font-variant-numeric:tabular-nums;paint-order:stroke;stroke:var(--card);stroke-width:3px;stroke-linejoin:round}
 .lbl-s{fill:var(--ink);font-weight:600}
 .bandlbl{fill:var(--ink-3);font-size:11.5px}
 .xh{stroke:var(--xhair);stroke-width:1;shape-rendering:crispEdges}
@@ -199,6 +202,36 @@ td.muted{color:var(--ink-3)}
 footer{max-width:1360px;margin:0 auto;padding:6px 20px 32px;font-size:12.5px;color:var(--ink-3)}
 footer p{margin:0}
 @media (max-width:600px){footer{padding:6px 12px 28px}}
+.vol-short{display:none}
+/* phone: compact header, bar and KPI cards */
+@media (max-width:600px){
+  .bar-in{padding:12px;gap:6px 12px}
+  .logo{width:36px;height:36px;border-radius:9px}
+  .ttl h1{font-size:21px}
+  .ttl p{font-size:12px}
+  .upd-top{font-size:12px}
+  .pbar-in{padding:6px 12px;gap:6px;min-height:40px}
+  .chips{gap:3px}
+  .chips button{font-size:12.5px;padding:4px 10px}
+  .pbar .chip{font-size:12.5px;padding:3px 9px}
+  .vsep{height:16px;margin:0}
+  .card{padding:10px 11px 9px}
+  .kl{font-size:12.5px}
+  .kl .code,.ttl .codes{display:none}
+  #vv-note{display:none}
+  .kv{font-size:21px;margin-top:2px}
+  .kv small{font-size:12px}
+  .kd{font-size:12px}
+  .kdp{display:none}
+  .spark{height:28px;margin:6px 0 2px}
+  .kpi .km:not(#vv-note){display:none}
+  .vol-long{display:none}
+  .vol-short{display:inline}
+  .vrow{margin-top:7px;gap:6px}
+  .vrow .vn{font-size:12.5px}
+  .vrow .vv{font-size:15px}
+  #vv-note{font-size:11.5px;margin-top:8px !important;padding-top:6px}
+}
 </style>
 </head>
 <body>
@@ -208,7 +241,7 @@ footer p{margin:0}
       <img class="logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f6f1e3'/%3E%3Cpath transform='translate(134.91 320) scale(0.30649 -0.30649)' fill='%2323262b' d='M99.31243896484375 0V96.56695556640625L195.59259033203125 106.56695556640625V110.0389404296875Q147.896484375 139.62298583984375 117.7283935546875 181.05508422851562Q87.560302734375 222.4871826171875 73.21224975585938 273.23931884765625Q58.86419677734375 323.991455078125 58.86419677734375 379.85565185546875Q58.86419677734375 475.07977294921875 97.54415893554688 548.663818359375Q136.22412109375 622.2478637695312 211.5560302734375 664.5118713378906Q286.887939453125 706.77587890625 396.07977294921875 706.77587890625Q507.9354248046875 706.77587890625 582.2953491210938 662.3599243164062Q656.6552734375 617.9439697265625 693.9753112792969 537.7359924316406Q731.2953491210938 457.52801513671875 731.2953491210938 349.41595458984375H590.6248779296875Q590.6248779296875 432.1680908203125 571.6087341308594 489.08831787109375Q552.5925903320312 546.008544921875 509.8803405761719 575.3447265625Q467.1680908203125 604.680908203125 396.07977294921875 604.680908203125Q326.0474853515625 604.680908203125 282.8352355957031 576.6087341308594Q239.62298583984375 548.5365600585938 219.57882690429688 495.8243103027344Q199.53466796875 443.112060546875 199.53466796875 368.13580322265625Q199.53466796875 290.2716064453125 226.93875122070312 232.85137939453125Q254.34283447265625 175.43115234375 303.9990539550781 144.12298583984375Q353.6552734375 112.8148193359375 419.79962158203125 112.8148193359375H688.1832885742188V0ZM292.4957275390625 349.9439697265625V770H364.991455078125V349.9439697265625ZM426.22412109375 349.9439697265625V770H498.7198486328125V349.9439697265625Z'/%3E%3Cpath d='M128 392H214L232 404L258 346L282 430L300 392H366' fill='none' stroke='%233b6ea8' stroke-width='20' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='384' cy='392' r='17' fill='%23b37a2e'/%3E%3C/svg%3E" alt="" width="44" height="44">
       <div class="ttl">
         <h1>ლარის პულსი</h1>
-        <p>ეროვნული ბანკის ოფიციალური კურსები: USD/GEL, EUR/GEL</p>
+        <p>ეროვნული ბანკის ოფიციალური კურსები<span class="codes">: USD/GEL, EUR/GEL</span></p>
       </div>
     </div>
     <div class="upd-top" id="upd-top"></div>
@@ -226,29 +259,29 @@ footer p{margin:0}
 
 <main class="grid">
   <section class="card kpi s3" aria-label="დოლარის კურსი">
-    <div class="kl">დოლარი<span>USD/GEL</span></div>
+    <div class="kl">დოლარი<span class="code">USD/GEL</span></div>
     <div class="kv" id="kv-usd">—</div>
     <div class="kd" id="kd-usd"></div>
     <div class="spark" id="sp-usd"></div>
     <div class="km" id="km-usd"></div>
   </section>
   <section class="card kpi s3" aria-label="ევროს კურსი">
-    <div class="kl">ევრო<span>EUR/GEL</span></div>
+    <div class="kl">ევრო<span class="code">EUR/GEL</span></div>
     <div class="kv" id="kv-eur">—</div>
     <div class="kd" id="kd-eur"></div>
     <div class="spark" id="sp-eur"></div>
     <div class="km" id="km-eur"></div>
   </section>
   <section class="card kpi s3" aria-label="ევრო დოლარში">
-    <div class="kl">ევრო დოლარში<span>EUR/USD</span></div>
+    <div class="kl">ევრო დოლარში<span class="code">EUR/USD</span></div>
     <div class="kv" id="kv-x">—</div>
     <div class="kd" id="kd-x"></div>
     <div class="spark" id="sp-x"></div>
     <div class="km" id="km-x"></div>
   </section>
   <section class="card kpi s3" aria-label="დღიური ვოლატილობა">
-    <div class="kl">დღიური ვოლატილობა</div>
-    <div class="cs">დღიური ცვლილების სტანდარტული გადახრა</div>
+    <div class="kl"><span class="vol-long">დღიური ვოლატილობა</span><span class="vol-short">ვოლატილობა</span></div>
+    <div class="cs"><span class="vol-long">დღიური ცვლილების სტანდარტული გადახრა</span><span class="vol-short">დღიური, სტ. გადახრა</span></div>
     <div class="vrow"><span class="key" style="background:var(--usd)"></span><span class="vn">დოლარი</span><span class="vv" id="vv-usd">—</span></div>
     <div class="vbar"><i id="vb-usd" style="background:var(--usd)"></i></div>
     <div class="vrow"><span class="key" style="background:var(--eur)"></span><span class="vn">ევრო</span><span class="vv" id="vv-eur">—</span></div>
@@ -561,9 +594,15 @@ function barPath(x, y0, y1, w, rmax) {
 }
 const renders = [];
 function mount(host, render) {
-  let w = 0;
-  new ResizeObserver(() => { const nw = host.clientWidth; if (nw && nw !== w) { w = nw; render(); } }).observe(host);
-  renders.push(render);
+  let w = -1, raf = 0;
+  const draw = () => { w = host.clientWidth; render(); };
+  /* redraw on a width change one frame later: drawing inside the observer callback resizes the host again
+     in the same frame, which the browser reports as "ResizeObserver loop completed with undelivered notifications" */
+  new ResizeObserver(() => {
+    if (raf || host.clientWidth === w) return;
+    raf = requestAnimationFrame(() => { raf = 0; if (host.clientWidth !== w) draw(); });
+  }).observe(host);
+  renders.push(draw);
 }
 function nearestIndex(svg, W, xs, clientX) {
   const r = svg.getBoundingClientRect();
@@ -598,19 +637,46 @@ function lineChart(host, cfg) {
     if (!W) return;
     const narrow = W < 520;
     const Hh = narrow ? (c.hs || 220) : (c.h || 280);
-    const showEnd = !!c.endLabel && !narrow;
-    const m = { l: 46, r: showEnd ? 104 : c.extremes ? 64 : 12, t: 20, b: 26 };
+    const m = { l: 46, r: 12, t: 20, b: 26 }; /* no right margin: every label is drawn inside the plot */
     const pw = W - m.l - m.r, ph = Hh - m.t - m.b;
     const pts = c.pts, x0 = c.x0, x1 = c.x1;
     let lo = Infinity, hi = -Infinity;
     c.series.forEach(s => pts.forEach(p => { const v = s.val(p); if (v < lo) lo = v; if (v > hi) hi = v; }));
-    const ys = yScale(lo, hi, narrow ? 4 : 5, c.zero, c.extremes ? 0.2 : 0.04);
     const sx = t => m.l + (x1 === x0 ? 0 : (t - x0) / (x1 - x0) * pw);
-    const sy = v => m.t + (ys.hi - v) / (ys.hi - ys.lo) * ph;
+    const li = pts.length - 1, lp = pts[li];
     if (svg) svg.remove();
     cur = -1;
     svg = S('svg', { viewBox: '0 0 ' + W + ' ' + Hh, width: W, height: Hh, role: 'img', 'aria-label': c.aria, tabindex: 0 });
     host.insertBefore(svg, tip);
+    /* end-label text (value; plus the series name when there is room: on narrow screens the legend above says it) */
+    const endText = s => t => { S('tspan', { class: 'lbl-s' }, t, c.endLabel(s, lp)); if (!narrow) S('tspan', { dx: 4 }, t, s.name); };
+    const nt = narrow ? 4 : 5, padF = c.extremes ? 0.2 : 0.04;
+    let ys = yScale(lo, hi, nt, c.zero, padF);
+    if (c.endLabel) {
+      /* headroom so the lowest line's end label fits under it and the highest one's over it,
+         clear of the line itself across the label's width */
+      const lv = c.series.map(s => s.val(lp));
+      const room = s => {
+        const t = S('text', { class: 'lbl' }, svg);
+        endText(s)(t);
+        const w = t.getBBox().width;
+        t.remove();
+        return pts.filter(p => sx(p.t) >= sx(lp.t) - 12 - w).map(p => s.val(p));
+      };
+      const bs = c.series[lv.indexOf(Math.min.apply(null, lv))], ts = c.series[lv.indexOf(Math.max.apply(null, lv))];
+      const nb = room(bs), nT = room(ts);
+      for (let k = 0; k < 3; k++) {
+        const u = (ys.hi - ys.lo) / ph, eb = bs.val(lp), et = ts.val(lp);
+        /* the box is 17px tall: 5px from the dot, or 3px from the line where it dips within 16px of the end */
+        const dip = Math.min.apply(null, nb), peak = Math.max.apply(null, nT);
+        const needLo = Math.min(eb - 22 * u, eb - dip <= 16 * u ? dip - 20 * u : Infinity);
+        const needHi = Math.max(et + (22 - m.t) * u, peak - et <= 16 * u ? peak + (20 - m.t) * u : -Infinity);
+        if (needLo >= ys.lo && needHi <= ys.hi) break;
+        lo = Math.min(lo, needLo); hi = Math.max(hi, needHi);
+        ys = yScale(lo, hi, nt, c.zero, padF);
+      }
+    }
+    const sy = v => m.t + (ys.hi - v) / (ys.hi - ys.lo) * ph;
 
     (c.bands || []).forEach(b => {
       const a = Math.max(b.from, x0), z = Math.min(b.to, x1);
@@ -636,47 +702,105 @@ function lineChart(host, cfg) {
       pts.forEach((p, i) => { d += (i ? 'L' : 'M') + sx(p.t).toFixed(1) + ',' + sy(s.val(p)).toFixed(1); });
       S('path', { d: d, class: 'ln', style: 'stroke:' + s.color }, svg);
     });
-    const li = pts.length - 1, lp = pts[li];
+    /* direct labels (every line chart): drawn inside the plot, never in a reserved margin.
+       Each label is measured and moved to the first free spot: inside the plot, clear of other labels and off every line. */
+    const placed = [], dots = [];
+    svg.querySelectorAll('.bandlbl').forEach(t => placed.push(t.getBBox()));
+    const inside = bb => bb.x >= m.l - 2 && bb.x + bb.width <= W - 2 && bb.y >= 0 && bb.y + bb.height <= m.t + ph + 2;
+    const clashes = bb => placed.some(p => !(bb.x + bb.width + 4 < p.x || p.x + p.width + 4 < bb.x || bb.y + bb.height + 2 < p.y || p.y + p.height + 2 < bb.y)) ||
+      dots.some(([x, y]) => x + 6 >= bb.x && x - 6 <= bb.x + bb.width && y + 6 >= bb.y && y - 6 <= bb.y + bb.height);
+    const geo = c.series.map(s => ({ px: pts.map(p => sx(p.t)), py: pts.map(p => sy(s.val(p))) }));
+    geo.forEach(g => dots.push([g.px[li], g.py[li]]));
+    const yAt = (g, x) => {
+      const px = g.px, py = g.py;
+      if (x <= px[0]) return py[0];
+      if (x >= px[px.length - 1]) return py[py.length - 1];
+      let a = 0, b = px.length - 1;
+      while (b - a > 1) { const mid = (a + b) >> 1; if (px[mid] <= x) a = mid; else b = mid; }
+      return px[b] === px[a] ? py[a] : py[a] + (py[b] - py[a]) * (x - px[a]) / (px[b] - px[a]);
+    };
+    /* exact: over the box's x-span the line is continuous, so it enters the box iff its y-range there overlaps the box */
+    const crosses = (g, bb) => {
+      const a = Math.max(bb.x - 2, g.px[0]), b = Math.min(bb.x + bb.width + 2, g.px[g.px.length - 1]);
+      if (a > b) return false;
+      let lo = Math.min(yAt(g, a), yAt(g, b)), hi = Math.max(yAt(g, a), yAt(g, b));
+      g.px.forEach((x, i) => { if (x > a && x < b) { if (g.py[i] < lo) lo = g.py[i]; if (g.py[i] > hi) hi = g.py[i]; } });
+      return hi >= bb.y - 3 && lo <= bb.y + bb.height + 3;
+    };
+    const y0 = c.zero ? sy(0) : null;
+    /* each spot has a cost (its order, or its distance from the dot); the cheapest spot that is inside the plot
+       and clear of other labels and dots wins. Touching the zero line costs a little; touching a data line
+       is a last resort (when allowLine) or rules the spot out */
+    const label = (build, spots, allowLine) => {
+      const t = S('text', { class: 'lbl' }, svg);
+      build(t);
+      let best = null;
+      spots.forEach((o, i) => {
+        const sp = o.s || o, base = o.s ? o.c : i;
+        if (best && best.cost <= base) return;
+        t.setAttribute('x', sp[0]); t.setAttribute('y', sp[1]); t.setAttribute('text-anchor', sp[2]);
+        const bb = t.getBBox();
+        if (!inside(bb) || clashes(bb)) return;
+        let cost = base;
+        if (geo.some(g => crosses(g, bb))) { if (!allowLine) return; cost += 1000; }
+        else if (y0 !== null && y0 >= bb.y - 4 && y0 <= bb.y + bb.height + 4) cost += 12;
+        if (!best || cost < best.cost) best = { sp, cost };
+      });
+      if (!best) { t.remove(); return false; }
+      t.setAttribute('x', best.sp[0]); t.setAttribute('y', best.sp[1]); t.setAttribute('text-anchor', best.sp[2]);
+      placed.push(t.getBBox());
+      return true;
+    };
+    const dot = (s, p) => S('circle', { cx: sx(p.t), cy: sy(s.val(p)), r: 4, class: 'dot', style: 'fill:' + s.color }, svg);
+    /* the last value: left of its dot (text ends 8px before it), as close to the dot as is free, in 3px steps;
+       the preferred side is worth 16px of distance */
+    const ex = sx(lp.t);
+    const endSpots = (ey, up) => {
+      const out = [];
+      for (let d = 0; d <= 45; d += 3) {
+        out.push({ c: d + (up ? 0 : 16), s: [ex - 8, ey - 9 - d, 'end'] });
+        out.push({ c: d + (up ? 16 : 0), s: [ex - 8, ey + 18 + d, 'end'] });
+      }
+      return out.sort((a, b) => a.c - b.c);
+    };
     if (c.extremes) {
-      c.series.forEach(s => {
+      c.series.forEach((s, k) => {
+        const px = geo[k].px, py = geo[k].py;
         let imin = 0, imax = 0;
         pts.forEach((p, i) => { if (s.val(p) < s.val(pts[imin])) imin = i; if (s.val(p) > s.val(pts[imax])) imax = i; });
         const isLastVal = i => Math.abs(s.val(pts[i]) - s.val(lp)) < 1e-12 && pts[i].t >= pts[li].t - 3 * DAY;
-        const mark = (i, above) => {
-          const p = pts[i], x = sx(p.t), y = sy(s.val(p));
-          S('circle', { cx: x, cy: y, r: 4, class: 'dot', style: 'fill:' + s.color }, svg);
-          const text = s.fmt(s.val(p)) + ' (' + dShort(p.t) + ')';
-          const fits = above ? y - 22 >= m.t - 16 : y + 19 <= m.t + ph - 4;
-          if (!fits) {
-            const right = x < m.l + 110;
-            S('text', { x: right ? x + 9 : x - 9, y: y + 4, 'text-anchor': right ? 'start' : 'end', class: 'lbl' }, svg, text);
-            return;
-          }
-          const anchor = x < m.l + 60 ? 'start' : x > W - m.r - 60 ? 'end' : 'middle';
-          const tx = anchor === 'start' ? x - 4 : anchor === 'end' ? x + 4 : x;
-          S('text', { x: tx, y: above ? y - 10 : y + 19, 'text-anchor': anchor, class: 'lbl' }, svg, text);
-        };
         const maxIsLast = isLastVal(imax), minIsLast = isLastVal(imin);
-        if (!maxIsLast) mark(imax, true);
-        if (imin !== imax && !minIsLast) mark(imin, false);
-        const x = sx(lp.t), y = sy(s.val(lp));
-        S('circle', { cx: x, cy: y, r: 4, class: 'dot', style: 'fill:' + s.color }, svg);
-        const t = S('text', { x: x + 9, y: y + 4, class: 'lbl' }, svg);
-        S('tspan', { x: x + 9, class: 'lbl-s' }, t, s.fmt(s.val(lp)));
-        if (minIsLast || maxIsLast) S('tspan', { x: x + 9, dy: 14 }, t, minIsLast ? 'მინიმუმი' : 'მაქსიმუმი');
+        /* extremes: above the max / below the min never touch the line; shift sideways before giving up */
+        const spotsFor = (i, up) => {
+          const x = px[i], y = py[i], out = [];
+          const a = x < m.l + 60 ? 'start' : x > W - m.r - 60 ? 'end' : 'middle';
+          const L = Math.max(m.l, x - 4), R = Math.min(W - m.r, x + 4); /* never push a label into the axis gutter */
+          const ax = a === 'start' ? L : a === 'end' ? R : x;
+          [0, 13].forEach(d => { const v = up ? y - 10 - d : y + 19 + d; out.push([ax, v, a], [R, v, 'end'], [L, v, 'start']); });
+          out.push([x - 9, y + 4, 'end'], [x + 9, y + 4, 'start']);
+          return out;
+        };
+        const extText = i => t => { t.textContent = s.fmt(s.val(pts[i])) + ' (' + dShort(pts[i].t) + ')'; };
+        /* the last value goes first (it matters most) */
+        const ey = py[li];
+        label(t => {
+          S('tspan', { class: 'lbl-s' }, t, s.fmt(s.val(lp)));
+          if (minIsLast || maxIsLast) S('tspan', { dx: 4 }, t, minIsLast ? 'მინ.' : 'მაქს.');
+        }, endSpots(ey, maxIsLast), true);
+        const todo = [];
+        if (!maxIsLast) todo.push([imax, true]);
+        if (imin !== imax && !minIsLast) todo.push([imin, false]);
+        /* an extreme with no clean spot is left to the tooltip: no label, no dot */
+        todo.forEach(([i, up]) => { if (label(extText(i), spotsFor(i, up), false)) { dot(s, pts[i]); dots.push([px[i], py[i]]); } });
+        dot(s, lp);
       });
     } else {
-      c.series.forEach(s => S('circle', { cx: sx(lp.t), cy: sy(s.val(lp)), r: 4, class: 'dot', style: 'fill:' + s.color }, svg));
-    }
-    if (showEnd) {
-      const labs = c.series.map(s => ({ s, y: sy(s.val(lp)) }));
-      const clash = labs.some((a, i) => labs.some((b, j) => j > i && Math.abs(a.y - b.y) < 32));
-      if (!clash) labs.forEach(L => {
-        const tx = sx(lp.t) + 11;
-        const t = S('text', { x: tx, y: L.y - 2, class: 'lbl' }, svg);
-        S('tspan', { x: tx, class: 'lbl-s' }, t, c.endLabel(L.s, lp));
-        S('tspan', { x: tx, dy: 15 }, t, L.s.name);
-      });
+      if (c.endLabel) {
+        /* top line labelled above its dot, the others below theirs; each switches sides if its spot is taken */
+        const order = c.series.map((s, k) => k).sort((a, b) => geo[a].py[li] - geo[b].py[li]);
+        order.forEach((k, r) => label(endText(c.series[k]), endSpots(geo[k].py[li], r === 0 && order.length > 1), true));
+      }
+      c.series.forEach(s => dot(s, lp));
     }
     const xs = pts.map(p => sx(p.t));
     const hov = S('g', { style: 'display:none' }, svg);
@@ -833,13 +957,22 @@ function monthChart(host) {
       placeTip(tip, host, cxs[i], m.t);
     };
     const hide = () => { cur = -1; hov.style.display = 'none'; tip.hidden = true; };
-    rows.forEach((r, i) => {
-      const h = S('rect', { x: m.l + band * i, y: 0, width: band, height: Hh, fill: 'transparent', class: 'hitcol' }, svg);
-      h.addEventListener('pointerenter', () => show(i));
-      h.addEventListener('pointerdown', () => show(i));
-      h.addEventListener('click', () => pick(r));
+    /* one hit layer: the month follows the pointer/finger by x; a tap (no slide) filters */
+    S('rect', { x: m.l, y: 0, width: pw, height: Hh, fill: 'transparent', class: 'hitcol' }, svg);
+    const idxAt = cx => {
+      const r = svg.getBoundingClientRect();
+      return clamp(Math.floor(((cx - r.left) * (W / r.width) - m.l) / band), 0, rows.length - 1);
+    };
+    let down = null;
+    svg.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY }; show(idxAt(e.clientX)); });
+    svg.addEventListener('pointermove', e => show(idxAt(e.clientX)));
+    svg.addEventListener('pointerup', e => {
+      const tap = down && Math.abs(e.clientX - down.x) < 10 && Math.abs(e.clientY - down.y) < 10;
+      down = null;
+      if (tap) pick(rows[idxAt(e.clientX)]);
     });
-    svg.addEventListener('pointerleave', hide);
+    svg.addEventListener('pointercancel', () => { down = null; hide(); });
+    svg.addEventListener('pointerleave', () => { if (!down) hide(); });
     svg.addEventListener('focus', () => show(cur >= 0 ? cur : rows.length - 1));
     svg.addEventListener('blur', hide);
     keyNav(svg, () => cur, rows.length, show, hide, i => { kbdToggle = true; pick(rows[i]); kbdToggle = false; });
@@ -905,7 +1038,7 @@ function spark(host, key, color) {
     const W = host.clientWidth;
     if (!W) return;
     host.textContent = '';
-    const Hh = 38, pts = P.pts;
+    const Hh = host.clientHeight || 38, pts = P.pts;
     const vals = pts.map(p => p[key]);
     const lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), span = (hi - lo) || 1;
     const sx = t => 2 + (t - P.st) / ((P.en - P.st) || 1) * (W - 8);
@@ -1134,6 +1267,8 @@ function apply() {
   const chip = $('#chip');
   chip.hidden = !r;
   if (r) chip.textContent = monthName(r, false, visibleMonths()) + ' \u2715';
+  const barIn = $('.pbar-in');
+  barIn.scrollLeft = r ? barIn.scrollWidth : 0; /* keep the month chip in view on narrow screens */
   /* label shows the chosen calendar span; KPI deltas show the base date the change is measured from */
   const from = SL.rel ? P.st : Math.max(first.t, Date.UTC(Math.min.apply(null, SL.years), 0, 1));
   const sameYear = parts(from)[2] === parts(P.en)[2];
@@ -1154,6 +1289,9 @@ function toggleMonth(key) {
   if (fromRow) { const row = document.querySelector('#t-mat tr.mrow[data-key="' + key + '"]'); if (row) row.focus({ preventScroll: true }); }
 }
 $('#chip').addEventListener('click', () => { SL.month = null; apply(); });
+/* show focus rings only while the keyboard is being used */
+document.addEventListener('keydown', e => { if (e.key === 'Tab' || e.key.indexOf('Arrow') === 0) document.documentElement.classList.add('kbd'); }, true);
+document.addEventListener('pointerdown', () => document.documentElement.classList.remove('kbd'), true);
 $('#csv').addEventListener('click', downloadCSV);
 
 /* ---------- live top-up: fetch rates newer than the embedded snapshot ---------- */
@@ -1196,6 +1334,13 @@ async function topUp() {
 }
 
 apply();
+/* chart labels are placed by measuring their text: measure again once the web font has replaced the fallback */
+if (document.fonts) {
+  let fr = 0;
+  const redraw = () => { if (!fr) fr = requestAnimationFrame(() => { fr = 0; renders.forEach(f => f()); }); };
+  document.fonts.addEventListener('loadingdone', redraw);
+  document.fonts.ready.then(redraw);
+}
 topUp();
 })();
 </script>
